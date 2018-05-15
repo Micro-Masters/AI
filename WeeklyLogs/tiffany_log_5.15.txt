@@ -9,5 +9,7 @@ For the week of 5/8/18 - 5/15/18
 - Experimented with starcraft map building tools
 - Started tutorials on how to build different types of agents e.g. basic, smart, sparse attak agents using pysc2
 	-> using tutorials on https://github.com/skjb/pysc2-tutorial
-- Read article on how to use A2C, and basic understanding of A2C
-	-> https://arxiv.org/pdf/1602.01783.pdf
+- Read article on how to use A2C
+	-> https://arxiv.org/pdf/1602.01783.pdf'
+- Read article that gives a basic understanding of the difference among Q-Learning, A2C, nerual networks
+	-> https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0
