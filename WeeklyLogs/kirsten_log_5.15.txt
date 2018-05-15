@@ -2,6 +2,7 @@ Kirsten's Log
 
 For the week of 5/8/18 - 5/15/18
 
+
 - experimented with starcraft map building tools
 - created zergmap.SC2Map
 - completed tutorials on how to make a sc2 bot in order to become more familiar
