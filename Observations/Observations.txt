@@ -1,0 +1,26 @@
+From the pysc2 environment.md documentation
+https://github.com/fohria/pysc2/blob/master/docs/environment.md
+
+obs.observation is a dictionary that contains:
+    screen, available_actions, cargo_slots_available, player,
+    minimap, multi_select, game_loop, cargo, score_cumulative,
+    single_select, build_queue, control_groups
+
+Observations are literally what is currently going on in the game 
+that can be seen by the player agent. 
+
+Minimap: the minimap consists of an array that shows various units
+	from player ids, friendly and hostile units visibility, etc
+
+Screen: shows information directly on the screen and has many of the 
+	same variables as minimap. But also has many more variables 
+	such as, hit points, energy, shields, etc
+
+General Player Info: another array that has player_id, minearls, food used
+	food used by workers, idle worker count, army count, etc
+
+Available Actions: array that lists all action ids available at time of 
+	observation. Observations taken presumably every frame
+https://github.com/fohria/pysc2/blob/master/pysc2/lib/actions.py
+
+
