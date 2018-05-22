@@ -1,0 +1,14 @@
+Kirsten's Log 
+
+For the week of 5/16/18 - 5/22/18
+
+- created killtanks.SC2Map
+  - better than previous map becuase it has modified win conditions
+  - only need to kill all tanks to win (lose if all zerglings die)
+  - no buildings or unit creating, just microing the given units  
+  - https://github.com/Micro-Masters/AI/commit/4aa24dc0fdbd150ac9cc60331f489c1076c30053
+- begining to combine things I've learned from tutorials that introduced the
+  pysc2 bot building mechanisms with simple a2c implementation examples. (still
+  early in this process though.)  
+  -https://github.com/Micro-Masters/AI/commit/947f804968db4ab39644fe82a38adda17de65e3e
+
