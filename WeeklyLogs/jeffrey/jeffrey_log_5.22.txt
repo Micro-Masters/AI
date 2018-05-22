@@ -1,0 +1,14 @@
+Jeffrey's Log
+
+5/22/18:
+
+- Looked over documentation of actions and observations
+  that are used and seen by the agents in order to better
+  understand how to implement our bot for our current goals.
+
+- Modified the random_agent given by the pysc2 repo in 
+  order to print out observations seen during the game. 
+
+- Also tried modifying attack_agent created by the tutorials
+  we followed, but not too many new observations were recorded
+  by the smarter agent. 

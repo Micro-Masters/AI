@@ -1,0 +1,14 @@
+Jeffrey's Log
+
+5/15/18:
+
+- Followed tutorials on this website in order to 
+  create a simple bot and a smart bot in PySC2. 
+  https://chatbotslife.com/building-a-basic-pysc2-agent-b109cde1477c  
+
+- Our group found a project called A2C that we plan to also 
+  use as a baseline for our project to build off of. 
+  However, I have been unable to get it working on 
+  my personal device.
+
+- Read over articles on A2C and different bot implementations.
