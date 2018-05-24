@@ -1,10 +1,11 @@
 import tensorflow as tf
 
 class A2CAgent:
-    def __init__(self, sess, policy, learning_rate=1e-4, max_gradient_norm=1):
+    def __init__(self, sess, policy, discount=.99, learning_rate=1e-4, max_gradient_norm=1):
         print('A2C init')
         self.sess = sess
         self.policy = policy
+        self.discount = discount
         self.learning_rate = learning_rate
         self.max_gradient_norm = max_gradient_norm
 
@@ -21,9 +22,14 @@ class A2CAgent:
             learning_rate=None,
             name="train_op")
 
-    def train(self):
-        print('A2C train')
-
     def act(self, observation):
         #pass observation
         return self.sess.run([self.action, self.value])
+
+    def train(self, observations, actions, rewards, values, dones):
+        returns = get_returns()
+        advantages = returns - values
+        print('A2C train')
+
+    def get_returns(self):
+        print('get returns')

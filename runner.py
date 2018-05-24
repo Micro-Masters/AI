@@ -12,8 +12,9 @@ class A2CRunner:
     def learn(self):
         print("learn")
         for i in range(self.n_updates):
-            self.run_batch()
-            self.agent.train()
+            train_args = self.run_batch()
+            if self.train:
+                self.agent.train(*train_args)
 
     # Run a batch and return the information
     def run_batch(self):
