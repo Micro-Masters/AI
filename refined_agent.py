@@ -163,10 +163,12 @@ class SparseAgent(base_agent.BaseAgent):
     def printUnitStats(self, obs):
         _UNIT_TYPE = features.SCREEN_FEATURES.unit_type.index
         unit_type = obs.observation['screen'][_UNIT_TYPE]
-        scv_y, scv_x = (unit_type == _TERRAN_MARINE).nonzero()
+        scv_y, scv_x = (unit_type == _TERRAN_SCV).nonzero()
+        scv_healh = obs.observation['single_select'][0]
 
-        print("=== SCV_X ===", scv_x)
-        print("=== SCV_Y ===", scv_y)
+        print("======== SCV_Health =======\n", scv_healh)
+        print("======== SCV_X ========\n", scv_x)
+        print("======== SCV_Y ========\n", scv_y)
 
 
 
