@@ -7,6 +7,8 @@ from __future__ import print_function
 from pysc2.agents import base_agent
 from pysc2.lib import actions
 import tensorflow as tf
+import numpy as np
+
 
 
 ####################################################################################
@@ -31,7 +33,7 @@ class A2CAgent:
         print('A2C init')
         self.sess = sess
         self.policy = policy
-        self.discount = discount
+        self.discount = discount #TODO: use discount from sc2_env observation instead, won't need this class var then
         self.learning_rate = learning_rate
         self.max_gradient_norm = max_gradient_norm
 
@@ -49,13 +51,20 @@ class A2CAgent:
             name="train_op")
 
     def act(self, observation):
-        #pass observation
+        # Use observation
         return self.sess.run([self.action, self.value])
 
-    def train(self, observations, actions, rewards, values, dones):
-        returns = get_returns()
+    def train(self, observations, actions, rewards, dones, values, next_value):
+        returns = self.get_returns(rewards, dones, values, next_value)
         advantages = returns - values
         print('A2C train')
 
-    def get_returns(self):
-        print('get returns')
+    # Compute return values as return = reward + discount * next value * (0 if done else 1)
+    def get_returns(self, rewards, dones, values, next_value):
+        returns = np.zeros((rewards.shape[0], rewards.shape[1]), dtype=np.float32)
+        # Compute last one individually with next_value
+        returns[-1] = rewards[-1] + self.discount * next_value * (1 - dones[-1])
+        # Compute rest in a loop with values
+        for i in reversed(range(returns.size[0] - 1)):
+            returns[i] = rewards[i] + self.discount * values[i+1] * (1 - dones[i])
+        return returns
