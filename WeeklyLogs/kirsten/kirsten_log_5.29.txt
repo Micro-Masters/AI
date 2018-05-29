@@ -1,0 +1,9 @@
+Kirsten's Log 
+
+For the week of 5/23/18 - 5/29/18
+
+- made more maps according to group's specifications
+- experimenting with framework for A2C that Corey posted, not much progress yet
+- trying to use AIGym environment
+
+
