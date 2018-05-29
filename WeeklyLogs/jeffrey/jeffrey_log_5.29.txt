@@ -1,0 +1,20 @@
+Jeffrey's Log
+
+5/29/18:
+
+- Looked into receiving enemy data so that we could
+  make decisions based on it. 
+
+- Bot that we used in tutorials would not select
+  enemies so looking into enemy data was impossible
+  with current bot, so attempted tweaking the bot
+  in order to select enemies, but ran into problems.
+
+- We can see player data though, so I made a text 
+  file explaining how. 
+
+- Also took the list of 523 actions and tried to 
+  cut it down to actions that would most benefit 
+  us. There are still many actions that I do not
+  know the effect of and there are also some that 
+  do not apply to us simply because of the race type. 
