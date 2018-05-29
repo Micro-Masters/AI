@@ -26,17 +26,30 @@ _NOT_QUEUED = [0]
 step_mul = 8
 
 FLAGS = flags.FLAGS
-flags.DEFINE_string("map", "zergmap",
+
+# added map to /Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/pysc2/
+# maps/mini-games.py provided by pysc2
+# changed keep_dims to keepdims in /baselines/baselines/a2c/utils.py as keep_dims is deprecated
+
+# FIXME: error messages:
+# File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1111, in _run
+#    str(subfeed_t.get_shape())))
+# ValueError: Cannot feed value of shape (1, 32, 32, 12) for Tensor 'Placeholder_7:0', which has shape '(5, 32, 32, 12)'
+
+
+flags.DEFINE_string("map", "Zerg-44-36",
                     "Name of a map to use to play.")
 start_time = datetime.datetime.now().strftime("%Y%m%d%H%M")
 flags.DEFINE_string("log", "tensorboard", "logging type(stdout, tensorboard)")
-flags.DEFINE_string("algorithm", "a2c", "RL algorithm to use.") # set algorithm to A2C
+flags.DEFINE_string("algorithm", "a2c", "RL algorithm to use.")  # set algorithm to A2C
 flags.DEFINE_integer("timesteps", 2000000, "Steps to train")
 flags.DEFINE_float("exploration_fraction", 0.5, "Exploration Fraction")
 flags.DEFINE_boolean("prioritized", True, "prioritized_replay")
 flags.DEFINE_boolean("dueling", True, "dueling")
 flags.DEFINE_float("lr", 0.0005, "Learning rate")
-flags.DEFINE_integer("num_agents", 4, "number of RL agents for A2C")
+
+# changed num_agents to 1 so only 1 screen at a time for now
+flags.DEFINE_integer("num_agents", 1, "number of RL agents for A2C")
 flags.DEFINE_integer("num_scripts", 4, "number of script agents for A2C")
 flags.DEFINE_integer("nsteps", 20, "number of batch steps for A2C")
 
@@ -45,103 +58,106 @@ PROJ_DIR = os.path.dirname(os.path.abspath(__file__))
 max_mean_reward = 0
 last_filename = ""
 
+# set start time as current time
 start_time = datetime.datetime.now().strftime("%m%d%H%M")
 
+
 def main():
-  FLAGS(sys.argv)
+    FLAGS(sys.argv)
 
-  print("algorithm : %s" % FLAGS.algorithm)
-  print("timesteps : %s" % FLAGS.timesteps)
-  print("map : %s" % FLAGS.map)
-  print("exploration_fraction : %s" % FLAGS.exploration_fraction)
-  print("prioritized : %s" % FLAGS.prioritized)
-  print("dueling : %s" % FLAGS.dueling)
-  print("num_agents : %s" % FLAGS.num_agents)
-  print("lr : %s" % FLAGS.lr)
-  
-  if (FLAGS.lr == 0):
-    FLAGS.lr = random.uniform(0.00001, 0.001)
+    print("algorithm : %s" % FLAGS.algorithm) # preset to A2C
+    print("timesteps : %s" % FLAGS.timesteps)
+    print("map : %s" % FLAGS.map) # our own map
+    print("exploration_fraction : %s" % FLAGS.exploration_fraction)
+    print("prioritized : %s" % FLAGS.prioritized)
+    print("dueling : %s" % FLAGS.dueling)
+    print("num_agents : %s" % FLAGS.num_agents)
+    print("lr : %s" % FLAGS.lr)
 
-  print("random lr : %s" % FLAGS.lr)
+    if FLAGS.lr == 0:
+        FLAGS.lr = random.uniform(0.00001, 0.001)
 
-  lr_round = round(FLAGS.lr, 8)
+    print("random lr : %s" % FLAGS.lr)
 
-  logdir = "tensorboard"
+    lr_round = round(FLAGS.lr, 8)
 
-  logdir = "tensorboard/mineral/%s/%s_n%s_s%s_nsteps%s/lr%s/%s" % (
-    FLAGS.algorithm, FLAGS.timesteps,
-    FLAGS.num_agents + FLAGS.num_scripts, FLAGS.num_scripts,
-    FLAGS.nsteps, lr_round, start_time)
+    logdir = "tensorboard"
 
-  if (FLAGS.log == "tensorboard"):
-    Logger.DEFAULT \
-      = Logger.CURRENT \
-      = Logger(dir=None,
-               output_formats=[TensorBoardOutputFormat(logdir)])
+    logdir = "tensorboard/mineral/%s/%s_n%s_s%s_nsteps%s/lr%s/%s" % (
+        FLAGS.algorithm, FLAGS.timesteps,
+        FLAGS.num_agents + FLAGS.num_scripts, FLAGS.num_scripts,
+        FLAGS.nsteps, lr_round, start_time)
 
-  elif (FLAGS.log == "stdout"):
-    Logger.DEFAULT \
-      = Logger.CURRENT \
-      = Logger(dir=None,
-               output_formats=[HumanOutputFormat(sys.stdout)])
+    if FLAGS.log == "tensorboard":
+        Logger.DEFAULT \
+            = Logger.CURRENT \
+            = Logger(dir=None,
+                     output_formats=[TensorBoardOutputFormat(logdir)])
 
-  num_timesteps = int(40e6)
-  num_timesteps //= 4
-  seed = 0
+    elif FLAGS.log == "stdout":
+        Logger.DEFAULT \
+            = Logger.CURRENT \
+            = Logger(dir=None,
+                     output_formats=[HumanOutputFormat(sys.stdout)])
 
-  # FIXME: Traceback (most recent call last):
-  # File "rewards.py", line 148, in <module>
-  #  main()
-  # File "rewards.py", line 98, in main
-  # env = SubprocVecEnv(FLAGS.num_agents + FLAGS.num_scripts, FLAGS.map)
-  # TypeError: __init__() missing 1 required positional argument: 'map_name'
-  env = SubprocVecEnv(FLAGS.num_agents + FLAGS.num_scripts, FLAGS.map)
+    num_timesteps = int(40e6)
+    num_timesteps //= 4
+    seed = 0
 
-  policy_fn = CnnPolicy # implements all methods in a plug and play fashion
-  a2c.learn(
-    policy_fn,
-    env,
-    seed,
-    total_timesteps=num_timesteps,
-    nprocs=FLAGS.num_agents + FLAGS.num_scripts,
-    nscripts=FLAGS.num_scripts,
-    ent_coef=0.5,
-    nsteps=FLAGS.nsteps,
-    max_grad_norm=0.01,
-    callback=a2c_callback)
+    # FIXME: Traceback (most recent call last):
+    # File "rewards.py", line 148, in <module>
+    #  main()
+    # File "rewards.py", line 98, in main
+    # env = SubprocVecEnv(FLAGS.num_agents + FLAGS.num_scripts, FLAGS.map)
+    # TypeError: __init__() missing 1 required positional argument: 'map_name'
+    env = SubprocVecEnv(FLAGS.num_agents, FLAGS.num_scripts, FLAGS.map)
+
+    policy_fn = CnnPolicy  # implements all methods in a plug and play fashion
+    a2c.learn(
+        policy_fn,
+        env,
+        seed,
+        total_timesteps=num_timesteps,
+        nprocs=FLAGS.num_agents + FLAGS.num_scripts,
+        nscripts=FLAGS.num_scripts,
+        ent_coef=0.5,
+        nsteps=FLAGS.nsteps,
+        max_grad_norm=0.01,
+        callback=a2c_callback)
+
 
 def a2c_callback(locals, globals):
-  global max_mean_reward, last_filename
+    global max_mean_reward, last_filename
 
-  if ('mean_100ep_reward' in locals and locals['num_episodes'] >= 10
-      and locals['mean_100ep_reward'] > max_mean_reward):
-    print("mean_100ep_reward : %s max_mean_reward : %s" %
-          (locals['mean_100ep_reward'], max_mean_reward))
+    if ('mean_100ep_reward' in locals and locals['num_episodes'] >= 10
+            and locals['mean_100ep_reward'] > max_mean_reward):
+        print("mean_100ep_reward : %s max_mean_reward : %s" %
+              (locals['mean_100ep_reward'], max_mean_reward))
 
-    if (not os.path.exists(os.path.join(PROJ_DIR, 'models/a2c/'))):
-      try:
-        os.mkdir(os.path.join(PROJ_DIR, 'models/'))
-      except Exception as e:
-        print(str(e))
-      try:
-        os.mkdir(os.path.join(PROJ_DIR, 'models/a2c/'))
-      except Exception as e:
-        print(str(e))
+        if not os.path.exists(os.path.join(PROJ_DIR, 'models/a2c/')):
+            try:
+                os.mkdir(os.path.join(PROJ_DIR, 'models/'))
+            except Exception as e:
+                print(str(e))
+            try:
+                os.mkdir(os.path.join(PROJ_DIR, 'models/a2c/'))
+            except Exception as e:
+                print(str(e))
 
-    if (last_filename != ""):
-      os.remove(last_filename)
-      print("delete last model file : %s" % last_filename)
+        if last_filename != "":
+            os.remove(last_filename)
+            print("delete last model file : %s" % last_filename)
 
-    max_mean_reward = locals['mean_100ep_reward']
-    model = locals['model']
+        max_mean_reward = locals['mean_100ep_reward']
+        model = locals['model']
 
-    filename = os.path.join(
-      PROJ_DIR,
-      'models/a2c/mineral_%s.pkl' % locals['mean_100ep_reward'])
-    model.save(filename)
-    print("save best mean_100ep_reward model to %s" % filename)
-    last_filename = filename
+        filename = os.path.join(
+            PROJ_DIR,
+            'models/a2c/mineral_%s.pkl' % locals['mean_100ep_reward'])
+        model.save(filename)
+        print("save best mean_100ep_reward model to %s" % filename)
+        last_filename = filename
 
 
 if __name__ == '__main__':
-  main()
+    main()
