@@ -162,7 +162,7 @@ class SparseAgent(base_agent.BaseAgent):
 
     def printUnitStats(self, obs):
         _UNIT_TYPE = features.SCREEN_FEATURES.unit_type.index
-        unit_type = obs.observation['screen'][_UNIT_TYPE]
+        unit_type = obs.observation['feature_screen'][_UNIT_TYPE]
         scv_y, scv_x = (unit_type == _TERRAN_SCV).nonzero()
         scv_healh = obs.observation['single_select'][0]
 
@@ -193,10 +193,10 @@ class SparseAgent(base_agent.BaseAgent):
             
             return actions.FunctionCall(_NO_OP, [])
         
-        unit_type = obs.observation['screen'][_UNIT_TYPE]
+        unit_type = obs.observation['feature_screen'][_UNIT_TYPE]
 
         if obs.first():
-            player_y, player_x = (obs.observation['minimap'][_PLAYER_RELATIVE] == _PLAYER_SELF).nonzero()
+            player_y, player_x = (obs.observation['feature_minimap'][_PLAYER_RELATIVE] == _PLAYER_SELF).nonzero()
             self.base_top_left = 1 if player_y.any() and player_y.mean() <= 31 else 0
         
             self.cc_y, self.cc_x = (unit_type == _TERRAN_COMMANDCENTER).nonzero()
@@ -227,7 +227,7 @@ class SparseAgent(base_agent.BaseAgent):
             current_state[3] = obs.observation['player'][_ARMY_SUPPLY]
     
             hot_squares = np.zeros(4)        
-            enemy_y, enemy_x = (obs.observation['minimap'][_PLAYER_RELATIVE] == _PLAYER_HOSTILE).nonzero()
+            enemy_y, enemy_x = (obs.observation['feature_minimap'][_PLAYER_RELATIVE] == _PLAYER_HOSTILE).nonzero()
             for i in range(0, len(enemy_y)):
                 y = int(math.ceil((enemy_y[i] + 1) / 32))
                 x = int(math.ceil((enemy_x[i] + 1) / 32))
@@ -241,7 +241,7 @@ class SparseAgent(base_agent.BaseAgent):
                 current_state[i + 4] = hot_squares[i]
     
             green_squares = np.zeros(4)        
-            friendly_y, friendly_x = (obs.observation['minimap'][_PLAYER_RELATIVE] == _PLAYER_SELF).nonzero()
+            friendly_y, friendly_x = (obs.observation['feature_minimap'][_PLAYER_RELATIVE] == _PLAYER_SELF).nonzero()
             for i in range(0, len(friendly_y)):
                 y = int(math.ceil((friendly_y[i] + 1) / 32))
                 x = int(math.ceil((friendly_x[i] + 1) / 32))
