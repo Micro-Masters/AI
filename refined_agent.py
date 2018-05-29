@@ -175,9 +175,9 @@ class SparseAgent(base_agent.BaseAgent):
     def step(self, obs):
         super(SparseAgent, self).step(obs)
 
-        time.sleep(5)
+#        time.sleep(5)
 
-        self.printUnitStats(obs)
+ #       self.printUnitStats(obs)
         
         if obs.last():
             reward = obs.reward
