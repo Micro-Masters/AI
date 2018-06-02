@@ -1,7 +1,7 @@
 import tensorflow as tf
 from runner import A2CRunner
 from agent import A2CAgent
-from agent import RandomAgent
+from random_agent import RandomAgent
 from environment import Environment
 
 
