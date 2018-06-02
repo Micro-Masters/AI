@@ -21,14 +21,12 @@ class Environment:
     def __init__(self, n_envs=1):
         self.n_envs = n_envs
 
-        map = MyMap()
-
         env_args = self.getArgs()
 
-        ##using args, create callable functions for game initialization for each worker in pipe
+        #using args, create callable functions for game initialization for each worker in pipe
         env_fns = [partial(make_sc2env, **env_args)] * n_envs
 
-        ##create pipe of workers
+        #create pipe of workers
         self.remotes, self.work_remotes = zip(*[Pipe() for _ in range(n_envs)])
         self.ps = [Process(target=worker, args=(work_remote, CloudpickleWrapper(env_fn)))
                    for (work_remote, env_fn) in zip(self.work_remotes, env_fns)]
@@ -38,37 +36,39 @@ class Environment:
     #def launch(self): ##Add bak in later??
     #    for i in range(self.n_envs):
 
-    ##send action to each worker
+
     def step(self, actions):
+        """send action to each worker"""
         print('env step')
         for remote, action in zip(self.remotes, actions):
             remote.send(("step", action))
         timesteps = [remote.recv() for remote in self.remotes]
         return timesteps
 
-    ##reset each worker
     def reset(self):
+        """reset each worker"""
         print('reset')
         for remote, action in zip(self.remotes, actions):
             remote.send(("reset", [None]*self.n_envs))
         timesteps = [remote.recv() for remote in self.remotes]
         return timesteps
 
-    ##close the pipe
     def close(self):
+        """close the pipe"""
         for remote in self.remotes:
             remote.send(('close', None))
         for p in self.ps:
             p.join()
 
-    ##set up arguments to give to sc2_env upon creation
     def getArgs(self):
-        size_px = (32, 32)
-
+        """
+        set up arguments to give to sc2_env upon creation
+        """
         agent_type = Agent(_ZERG) #specify agent race
         bot_type = Bot(_TERRAN, 1) #specify bot race and difficulty
         player_types = [agent_type, bot_type]
 
+        size_px = (32, 32)
         dimensions = features.Dimensions(screen=size_px, minimap=size_px) ##TODO
         #note: screen size must be at least as big as minimap
 
@@ -76,7 +76,7 @@ class Environment:
                                                         use_feature_units=True) ##check exactly what feature units are
 
         env_args = dict(
-            map_name = "Simple64", ##TODO: set map name to something else
+            map_name="Zerg_44_36", ##TODO: set map name to something else
             step_mul=8, ##number of game steps per agent step
             game_steps_per_episode=0,
             score_index=-1, #uses win/loss reward. change later to use map default
@@ -86,17 +86,20 @@ class Environment:
             #screen_size_px=size_px, ##depr
             #minimap_size_px=size_px)###depr
 
-        ##add visualization if running only one game environment
-        #TODO: allow user to specify number of game instances visualized
-        #if(self.n_envs == 1):
-        #    env_args['visualize'] = True
-
+        #add visualization if running only one game environment
+        if(self.n_envs == 1):
+            env_args['visualize'] = True
+        # TODO: allow user to specify number of game instances visualized
         return env_args
 
 
-class MyMap(lib.Map):
-    prefix = ""
-    filename = "zergmap"
+class Zerg_44_36(lib.Map):
+    """
+    subclassing of map type. needed for map to be recognised by pysc2
+    this map must be in Starcraft Map directory
+    """
+    prefix = "" # "/home/kirsten/StarCraftII/ECS170Project/AI/"
+    filename = "Zerg_44_36"
     players = 2
 
 def worker(remote, env_fn_wrapper):
@@ -142,5 +145,9 @@ class CloudpickleWrapper(object):
 
 
 def make_sc2env(**kwargs):
+    """
+    function called by each environment when created in pipe
+    when called, **kwargs comes from getArgs() function
+    """
     env = sc2_env.SC2Env(**kwargs)
     return env
