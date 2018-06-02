@@ -1,7 +1,9 @@
 import tensorflow as tf
 from runner import A2CRunner
 from agent import A2CAgent
+from agent import RandomAgent
 from environment import Environment
+
 
 def main():
     print("Commencing magic...")
@@ -9,6 +11,7 @@ def main():
 
     env = Environment()
     agent = A2CAgent()
+    #agent = RandomAgent()
     runner = A2CRunner(agent, env)
     runner.learn()
 

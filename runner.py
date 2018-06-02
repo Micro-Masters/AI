@@ -8,6 +8,7 @@ class A2CRunner:
         self.n_updates = n_updates
         self.n_steps = n_steps
         self.observation = None
+        self.env = env
 
     def learn(self):
         print("learn")

@@ -1,6 +1,16 @@
 from multiprocessing import Process, Pipe
 from pysc2.env import sc2_env
+from pysc2.env.sc2_env import Agent, Bot
+from pysc2.lib import features
+from pysc2 import maps
+from pysc2.maps import lib
 from functools import partial
+from absl import flags
+FLAGS = flags.FLAGS
+FLAGS(['environment.py']) #XXX
+
+_TERRAN = 2
+_ZERG = 3
 
 #references:
 #   https://github.com/openai/baselines/blob/master/baselines/common/vec_env/subproc_vec_env.py
@@ -11,19 +21,9 @@ class Environment:
     def __init__(self, n_envs=1):
         self.n_envs = n_envs
 
-        ##set up arguments to give to sc2_env upon creation
-        size_px = (32, 32)
-        env_args = dict(
-            map_name='zergmap', ##TODO: set map name
-            step_mul=8, ##number of game steps per agent step
-            game_steps_per_episode=0,
-            screen_size_px=size_px, ##screen and minimap resolution
-            minimap_size_px=size_px)
+        map = MyMap()
 
-        ##add visualization if running only one game environment
-        #TODO: allow user to specify number of game instances visualized
-        if(n_envs == 1):
-            env_args['visualize'] = 'store_true'
+        env_args = self.getArgs()
 
         ##using args, create callable functions for game initialization for each worker in pipe
         env_fns = [partial(make_sc2env, **env_args)] * n_envs
@@ -60,6 +60,44 @@ class Environment:
             remote.send(('close', None))
         for p in self.ps:
             p.join()
+
+    ##set up arguments to give to sc2_env upon creation
+    def getArgs(self):
+        size_px = (32, 32)
+
+        agent_type = Agent(_ZERG) #specify agent race
+        bot_type = Bot(_TERRAN, 1) #specify bot race and difficulty
+        player_types = [agent_type, bot_type]
+
+        dimensions = features.Dimensions(screen=size_px, minimap=size_px) ##TODO
+        #note: screen size must be at least as big as minimap
+
+        agent_interface = features.AgentInterfaceFormat(feature_dimensions=dimensions,
+                                                        use_feature_units=True) ##check exactly what feature units are
+
+        env_args = dict(
+            map_name = "Simple64", ##TODO: set map name to something else
+            step_mul=8, ##number of game steps per agent step
+            game_steps_per_episode=0,
+            score_index=-1, #uses win/loss reward. change later to use map default
+            disable_fog=True,
+            agent_interface_format=agent_interface,
+            players=player_types)
+            #screen_size_px=size_px, ##depr
+            #minimap_size_px=size_px)###depr
+
+        ##add visualization if running only one game environment
+        #TODO: allow user to specify number of game instances visualized
+        #if(self.n_envs == 1):
+        #    env_args['visualize'] = True
+
+        return env_args
+
+
+class MyMap(lib.Map):
+    prefix = ""
+    filename = "zergmap"
+    players = 2
 
 def worker(remote, env_fn_wrapper):
     """
