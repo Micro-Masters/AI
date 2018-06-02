@@ -15,7 +15,8 @@ _ZERG = 3
 #references:
 #   https://github.com/openai/baselines/blob/master/baselines/common/vec_env/subproc_vec_env.py
 #   https://github.com/simonmeister/pysc2-rl-agents/blob/master/rl/environment.py
-
+#   https://github.com/deepmind/pysc2/blob/master/pysc2/env/sc2_env.py
+#       other pysc2 git repos too, but above is the main one
 
 class Environment:
     def __init__(self, n_envs=1):
@@ -36,7 +37,6 @@ class Environment:
     #def launch(self): ##Add bak in later??
     #    for i in range(self.n_envs):
 
-
     def step(self, actions):
         """send action to each worker"""
         print('env step')
@@ -48,6 +48,7 @@ class Environment:
     def reset(self):
         """reset each worker"""
         print('reset')
+        actions = [None] * self.n_envs
         for remote, action in zip(self.remotes, actions):
             remote.send(("reset", [None]*self.n_envs))
         timesteps = [remote.recv() for remote in self.remotes]
@@ -92,6 +93,13 @@ class Environment:
         # TODO: allow user to specify number of game instances visualized
         return env_args
 
+    ##TODO: delete later?
+    def get_action_specs(self):
+        actions = [None] * self.n_envs
+        for remote, action in zip(self.remotes, actions):
+            remote.send(("action_spec", [None]*self.n_envs))
+        specs = [remote.recv() for remote in self.remotes]
+        return specs
 
 class Zerg_44_36(lib.Map):
     """
@@ -123,9 +131,11 @@ def worker(remote, env_fn_wrapper):
         elif cmd == 'observation_spec':
             spec = env.observation_spec()
             remote.send(spec)
+        elif cmd == 'action_spec':
+            spec = env.action_spec()
+            remote.send(spec)
         else:
             raise NotImplementedError
-
 
 class CloudpickleWrapper(object):
     """

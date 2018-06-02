@@ -29,9 +29,10 @@ class A2CAgent:
         return self.sess.run([self.action, self.value])
 
     def train(self, observations, actions, rewards, dones, values, next_value):
+        print('A2C train')
         returns = self.get_returns(rewards, dones, values, next_value)
         advantages = returns - values
-        print('A2C train')
+
 
     # Compute return values as return = reward + discount * next value * (0 if done else 1)
     def get_returns(self, rewards, dones, values, next_value):

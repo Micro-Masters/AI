@@ -40,3 +40,5 @@ class A2CRunner:
         next_value = self.agent.act(self.observation)
 
         return observations, actions, rewards, dones, values, next_value
+
+
