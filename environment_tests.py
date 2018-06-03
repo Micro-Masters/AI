@@ -36,25 +36,16 @@ def test_env(env):
 
 
 def check_obs(obs, i, counts):
-    # print(type(obs))
-    # print(type(obs[0]))
-    # print(type(obs[0].observation))
-    # print(type(obs[0].observation['player']))
-    # print(type(obs[0].observation['player'][0]))
+
     print("army count: ", obs[0].observation['player'][8])
     counts[i] = obs[0].observation['player'][8]
+
     print("score_cumulative[total_value_units]: ", obs[0].observation.score_cumulative[3])
     print("score_cumulative[killed_value_units]: ", obs[0].observation.score_cumulative[5])
 
 
-    if(counts[i] < counts[i-1]):
-        print("LOST ", counts[i] - counts[i - 1], " ZERGLINGS :( ")
-    #print("test: ", type(obs[0].observation["ScreenFeatures"]))
-    #print("test: ", type(obs[0].observation["feature_screen"]))
-    #print(obs[0].observation)
-    # print("test: ", type(obs[0].observation.feature_units))
-    # print("test: ", obs[0].observation.feature_units)
-    # print("test: ", type(obs[0].observation["score_cumulative"]))
-    # print("test: ", type(obs[0].observation["score_cumulative"][0]))
-    # print("test: ", type(obs[0].observation.feature_units[0][0]))
-    #print("test: ", obs[0].observation["feature_units"])
+    np.save('feature_unit_file', obs[0].observation.feature_units)  # save the file as "outfile_name.npy"
+
+    temp = obs[0].observation.feature_units
+
+    print("feature_unit test: ", np.array(temp))
