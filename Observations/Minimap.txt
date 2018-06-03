@@ -1,25 +1,45 @@
-MultiSelect
+Minimap
 
--  Multi-select observations are used to show the stats
-   of the current group of units selected.
+-  The minimap shows all the units that can currently
+   be seen through the fog of war. The minimap is also
+   a tensor that shows [height_map, visibility, creep, 
+   camera, player_id, player_relative, selected] 
 
--  Using the action SELECT_ARMY you can select your
-   army and the multi-select observations will show 
-   the stats of each unit. 
+-  The elements important to us are the player_relative 
+   values and the selected values. 
 
--  The multi-select observations returns a tensor
-   meaning that in order to see individual stats
-   like health you must treat it as a double array.
+-  Unlike the Multi-Select and Single-Select tensors, the
+   elements in the Minimap are all separated into their own 
+   arrays. I can access all of the values of player relative with
+   obs.observation['feature_minimap'][4] 
+   This will give me the individual values of all units on the map
+   and I will be able to see if they are enemy units or my units. 
 
--  obs.observations['multi-select'][0] will return 
-   all the stats of the first unit in selected.
+-  One easy way cut the array down to just enemy units is to call .nonzero()
+   (obs.observation['feature_minimap'][4] == 4).nonzero() will return all
+   entries that are nonzero and are equal to the number 4 which indicates
+   the unit is an enemy unit. 
 
--  The stats are ordered [unit type, player_relative,
-   health, shields, energy, transport, build progress]
+-  The "smart attacking agent" tutorial we used even found the locations
+   of the enemies by doing:
+	enemy_y, enemy_x = (obs.observation['feature_minimap'][4] == 4).nonzero()
 
--  The stats important to us are the player_relative
-   and health. player_relative equals 1 if it is our 
-   unit and equals 4 if it is an enemy unit. 
+Screen
 
--  We can use multi-select to keep track of our units'
-   health as well as enemy health if we select enemies. 
+-  The Screen can be used similarly to the Minimap. However, it also contains more 
+   information than the minimap. 
+
+-  The Screen has a tensor larger than the minimap conatining: [height_map, visibility, creep, power,
+   player_id, player_relative, unit_type, selected, hit_points, energy, shields, 
+   unit_density, unit_density_aa
+
+-  Again, the values that are important to us on the screen are player_relative, 
+   selected, and hit_points.
+
+-  Also, similarly to the minimap the indexes of the tensor are their own tensors that 
+   contain the values of all the units for the specified tensor. 
+
+-  To access all of the values of player_relative on the screen simply call
+	obs.observation['feature_screen'][5]//notice that the index number is 
+        different from the minimap. 
+ 
