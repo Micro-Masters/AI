@@ -46,11 +46,18 @@ def check_obs(obs, i, counts):
     print("score_cumulative[total_value_units]: ", obs[0].observation.score_cumulative[3])
     print("score_cumulative[killed_value_units]: ", obs[0].observation.score_cumulative[5])
 
+    print("player: ", obs[0].observation['player'])
+    print(type(obs[0].observation['feature_screen']))
+    #print(type(obs[0].observation['feature_screen'][0]))
+    test = obs[0].observation['feature_screen']
+    print(test[0][0])
+    #print("obs: ", obs[0].observation)
 
     if(counts[i] < counts[i-1]):
         print("LOST ", counts[i] - counts[i - 1], " ZERGLINGS :( ")
-    #print("test: ", type(obs[0].observation["ScreenFeatures"]))
-    #print("test: ", type(obs[0].observation["feature_screen"]))
+    # print("test: ", type(obs[0].observation["ScreenFeatures"]))
+    # print("test: ", type(obs[0].observation['feature_screen']))
+    # print("test: ", (obs[0].observation['feature_screen'][1] == 3).nonzero())
     #print(obs[0].observation)
     # print("test: ", type(obs[0].observation.feature_units))
     # print("test: ", obs[0].observation.feature_units)

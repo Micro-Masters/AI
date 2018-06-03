@@ -71,14 +71,21 @@ class Environment:
         player_types = [agent_type, bot_type]
 
         size_px = (32, 32)
-        dimensions = features.Dimensions(screen=size_px, minimap=size_px) ##TODO
-        action_sp = actions.ActionSpace.FEATURES
+        # dimensions = features.Dimensions(screen=size_px,
+        #                                  minimap=size_px,
+        #                                  feature_screen=32) ##TODO
+        # action_sp = actions.ActionSpace.FEATURES
         #note: screen size must be at least as big as minimap
 
-        agent_interface = features.AgentInterfaceFormat(
-            feature_dimensions=dimensions,
-            action_space=action_sp,
-            use_feature_units=True) ##check exactly what feature units are
+        # agent_interface = features.AgentInterfaceFormat(
+        #     feature_dimensions=dimensions,
+        #     #action_space=action_sp,
+        #     use_feature_units=True) ##check exactly what feature units are
+        agent_interface = sc2_env.parse_agent_interface_format(
+            feature_screen=32,
+            feature_minimap=32,
+            action_space="FEATURES", #actions.ActionSpace.FEATURES,
+            use_feature_units=True)
 
         env_args = dict(
             map_name="Zerg_44_36", ##TODO: set map name to something else
