@@ -1,16 +1,18 @@
-import tensorflow as tf
 import numpy as np
 
 
 class A2CRunner:
-    def __init__(self, agent, env, n_updates=10000, n_steps=16, train=True):
+    def __init__(
+            self, agent, env, environment_modifier=None,
+            n_updates=10000, n_steps=16, train=True):
         self.agent = agent
+        self.env = env
+        self.environment_modifier = environment_modifier
         self.n_updates = n_updates
         self.n_steps = n_steps
         self.observation = None
-        self.env = env
 
-    # Begin learning!
+    # Begin running and learning (if desired)!
     def begin(self):
         # Run for n_updates batches, training if self.train=True
         for i in range(self.n_updates):
@@ -25,7 +27,7 @@ class A2CRunner:
         rewards = np.zeros(shapes, dtype=np.float32)
         values = np.zeros(shapes, dtype=np.float32)
         dones = np.zeros(shapes, dtype=np.float32)
-        # We will assign observation arrays of n_env length so these become multidimensional too
+        # We will assign observation arrays of n_envs length so these become multidimensional too
         observations = [None] * self.n_steps
         actions = [None] * self.n_steps
 
@@ -35,6 +37,11 @@ class A2CRunner:
             actions[i], values[i] = action, value
             observations[i] = self.observation
             self.observation, rewards[i], dones[i] = self.env.step(action)
+
+            # Modify the observation and reward if given such a modifier
+            if self.environment_modifier is not None:
+                self.observation, rewards[i] = self.environment_modifier.modify(
+                    self.observation, rewards[i], observations[i])
 
         # Get the next value (for use in returns calculation)
         next_value = self.agent.act(self.observation)

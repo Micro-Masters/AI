@@ -5,6 +5,7 @@ from random_agent import RandomAgent
 from environment import Environment
 from environment_tests import test_env
 
+
 def main():
     print("Commencing magic...")
     sess = tf.Session()
