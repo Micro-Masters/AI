@@ -1,5 +1,9 @@
 
 # Created by https://www.gitignore.io/api/macos,linux,python,windows,pycharm,intellij
+# Modified by Corey
+
+# Ignore entire PyCharm settings folder
+.idea
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
