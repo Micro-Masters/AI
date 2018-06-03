@@ -12,7 +12,8 @@ MultiSelect
    like health you must treat it as a double array.
 
 -  obs.observations['multi-select'][0] will return 
-   all the stats of the first unit in selected.
+   all the stats of the first unit in the group that
+   has been selected.
 
 -  The stats are ordered [unit type, player_relative,
    health, shields, energy, transport, build progress]
@@ -21,5 +22,29 @@ MultiSelect
    and health. player_relative equals 1 if it is our 
    unit and equals 4 if it is an enemy unit. 
 
--  We can use multi-select to keep track of our units'
-   health as well as enemy health if we select enemies. 
+-  To access player_relative or health individually
+   you can access the element in the array with the
+   correct index using obs.observations['multi-select'][0][1]
+   for player_relative and obs.observations['multi-select][0][2]
+   for health. 
+
+-  Using SELECT_ARMY will result in selecting units only within 
+   your army, so you will only see units with a player_relative
+   value of 1. 
+
+-  You can also use the command SELECT_RECT to select an area 
+   on the screen to select units. Using this command can result
+   in selecting units from both your army and the enemy army. 
+
+Single Select
+
+-  Single select observations are to show the stats of the currently 
+   selected unit. 
+
+-  This is done similarly to the multi-select observation, but you 
+   don't have to treat it as a double array. 
+   calling obs.observation['single-select'] will show all the stats
+   of the currently chosen unit. 
+
+-  You can check for individual values, such as player_relative, by
+   calling obs.observation['single-select'][1]

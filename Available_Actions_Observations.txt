@@ -1,0 +1,178 @@
+   0/no_op                                              ()
+   # No action
+
+   1/move_camera                                        (1/minimap [64, 64])
+   # Move the Camera
+
+   2/select_point                                       (6/select_point_act [4];
+ 0/screen [84, 84])
+   # Select a unit at a point
+
+   3/select_rect                                        (7/select_add [2]; 0/scr
+een [84, 84]; 2/screen2 [84, 84])
+   # Select units within a rectangle
+
+   4/select_control_group                               (4/control_group_act [5]
+;  # Calls control_group and in this case invokes selection
+
+   5/control_group_id [10])
+   # passes id variable to control_group function
+ 
+ 453/Stop_quick                                         (3/queued [2])
+   # invokes cmd_quick which does "quick" commands
+
+ 230/Effect_Spray_screen                                (3/queued [2]; 0/screen
+[84, 84])
+   # invokes cmd_screen which does a command that needs a point on the screen
+
+ 451/Smart_screen                                       (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+
+ 264/Harvest_Gather_screen                              (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+
+ 452/Smart_minimap                                      (3/queued [2]; 1/minimap
+ [64, 64])
+   # cmd_minimap Do a command that needs a point on the minimap
+
+ 331/Move_screen                                        (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+ 332/Move_minimap                                       (3/queued [2]; 1/minimap
+ [64, 64])
+   # cmd_minimap
+
+ 333/Patrol_screen                                      (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+
+ 334/Patrol_minimap                                     (3/queued [2]; 1/minimap
+ [64, 64])
+   # cmd_minimap
+
+  12/Attack_screen                                      (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+
+  13/Attack_minimap                                     (3/queued [2]; 1/minimap
+ [64, 64])
+   # cmd_minimap
+
+ 274/HoldPosition_quick                                 (3/queued [2])
+   # cmd_quick
+
+ 220/Effect_Repair_screen                               (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+
+ 221/Effect_Repair_autocast                             ()
+   # autocast Toggles autocast
+
+  79/Build_Refinery_screen                              (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+
+  91/Build_SupplyDepot_screen                           (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+
+ 269/Harvest_Return_quick                               (3/queued [2])
+   # cmd_quick
+
+  50/Build_EngineeringBay_screen                        (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+
+ 261/Halt_quick                                         (3/queued [2])
+   # cmd_quick
+
+  42/Build_Barracks_screen                              (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+
+   6/select_idle_worker                                 (10/select_worker [4])
+   # select an idle worker
+
+ 140/Cancel_quick                                       (3/queued [2])
+   # cmd_quick
+
+ 335/Rally_Units_screen                                 (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+
+ 336/Rally_Units_minimap                                (3/queued [2]; 1/minimap
+ [64, 64])
+   # cmd_minimap
+
+  44/Build_CommandCenter_screen                         (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+
+  43/Build_Bunker_screen                                (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+
+ 281/Lift_quick                                         (3/queued [2])
+   # cmd_quick
+
+ 477/Train_Marine_quick                                 (3/queued [2])
+   # cmd_quick
+
+ 168/Cancel_Last_quick                                  (3/queued [2])
+   # cmd_quick
+
+  11/build_queue                                        (11/build_queue_id [10])
+   # cancel a unit in the build queue
+
+   7/select_army                                        (7/select_add [2])
+   # select the entire army
+
+   5/select_unit                                        (8/select_unit_act [4];
+9/select_unit_id [500])
+   # select a specific unit form the multi-unit selection
+
+
+ 294/LoadAll_quick                                      (3/queued [2])
+   # cmd_quick
+
+ 490/Train_SCV_quick                                    (3/queued [2])
+   # cmd_quick
+
+ 343/Rally_Workers_screen                               (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+
+ 344/Rally_Workers_minimap                              (3/queued [2]; 1/minimap
+ [64, 64])
+   # cmd_minimap
+
+  10/unload                                             (12/unload_id [500])
+   # cmd_unload unlaod a unit from a transport/bunker/nydus/etc
+
+ 511/UnloadAll_quick                                    (3/queued [2])
+   # cmd_quick
+
+   5/select_unit                                        (8/select_unit_act [4];
+   #Select specific unit from the multi-unit selection
+   
+   9/select_unit_id [500])
+   # which unit to select by id
+
+
+  13/Attack_minimap                                     (3/queued [2]; 1/minimap
+ [64, 64])
+   # cmd_minimap
+
+ 334/Patrol_minimap                                     (3/queued [2]; 1/minimap
+ [64, 64])
+   # cmd_minimap
+
+ 275/Land_screen                                        (3/queued [2]; 0/screen
+[84, 84])
+   # cmd_screen
+
+  64/Build_MissileTurret_screen                         (3/queued [2]: 0/screen
+[84, 84])
+   # cmd_screen
