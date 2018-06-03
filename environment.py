@@ -2,6 +2,7 @@ from multiprocessing import Process, Pipe
 from pysc2.env import sc2_env
 from pysc2.env.sc2_env import Agent, Bot
 from pysc2.lib import features
+from pysc2.lib import actions
 from pysc2 import maps
 from pysc2.maps import lib
 from functools import partial
@@ -71,10 +72,13 @@ class Environment:
 
         size_px = (32, 32)
         dimensions = features.Dimensions(screen=size_px, minimap=size_px) ##TODO
+        action_sp = actions.ActionSpace.FEATURES
         #note: screen size must be at least as big as minimap
 
-        agent_interface = features.AgentInterfaceFormat(feature_dimensions=dimensions,
-                                                        use_feature_units=True) ##check exactly what feature units are
+        agent_interface = features.AgentInterfaceFormat(
+            feature_dimensions=dimensions,
+            action_space=action_sp,
+            use_feature_units=True) ##check exactly what feature units are
 
         env_args = dict(
             map_name="Zerg_44_36", ##TODO: set map name to something else
@@ -88,8 +92,8 @@ class Environment:
             #minimap_size_px=size_px)###depr
 
         #add visualization if running only one game environment
-        if(self.n_envs == 1):
-            env_args['visualize'] = True
+        #if(self.n_envs == 1):
+        #    env_args['visualize'] = True
         # TODO: allow user to specify number of game instances visualized
         return env_args
 
