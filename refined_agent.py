@@ -163,6 +163,7 @@ class SparseAgent(base_agent.BaseAgent):
     def printUnitStats(self, obs):
         _UNIT_TYPE = features.SCREEN_FEATURES.unit_type.index
         unit_type = obs.observation['feature_screen'][_UNIT_TYPE]
+        temp = obs.observation['feature_screen']
         scv_y, scv_x = (unit_type == _TERRAN_SCV).nonzero()
         scv_healh = obs.observation['single_select'][0]
 
