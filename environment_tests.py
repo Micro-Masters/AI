@@ -58,8 +58,8 @@ def check_obs(obs, i, counts):
     print("army count: ", obs[0].observation['player'][8])
     counts[i] = obs[0].observation['player'][8]
 
-    print("score_cumulative[total_value_units]: ", obs[0].observation.score_cumulative[3])
-    print("score_cumulative[killed_value_units]: ", obs[0].observation.score_cumulative[5])
+    # print("score_cumulative[total_value_units]: ", obs[0].observation.score_cumulative[3])
+    # print("score_cumulative[killed_value_units]: ", obs[0].observation.score_cumulative[5])
 
     # print("player: ", obs[0].observation['player'])
     # print(type(obs[0].observation))

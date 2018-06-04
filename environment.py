@@ -99,8 +99,8 @@ class Environment:
             #minimap_size_px=size_px)###depr
 
         #add visualization if running only one game environment
-        #if(self.n_envs == 1):
-        #    env_args['visualize'] = True
+        if(self.n_envs == 1):
+            env_args['visualize'] = True
         # TODO: allow user to specify number of game instances visualized
         return env_args
 
