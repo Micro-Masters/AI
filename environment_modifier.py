@@ -12,7 +12,7 @@ class EnvironmentModifier:
     def modify(self, observations, rewards, last_observations):
         new_observations = [self.observation_modifier.modify(obs) for obs in observations]
         new_rewards = [self.reward_modifier.modify(obs, rwd, last_obs)
-                       for obs in observations
+                       for obs in new_observations
                        for rwd in rewards
                        for last_obs in last_observations]
         return new_observations, new_rewards
