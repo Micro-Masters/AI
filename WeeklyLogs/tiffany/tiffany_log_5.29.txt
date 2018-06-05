@@ -1,0 +1,7 @@
+Tiffany Log 
+
+For the week of 5/22/18 - 5/29/18
+
+- Modified rewards.py so that it works perfectly right now
+- Researched on PPO and PPO2
+    - Thought about the layout of the codes of ppo
