@@ -1,3 +1,9 @@
 Tiffany Log 
 
 For the week of 5/29/18 - 6/5/18
+
+- Looked into methods of implemnting PPO
+- Looked into the code of baseline
+    - How are functions linked together
+    - Which functions are useful for our project specifically
+- Worked on creating PPO related functions for agent.py

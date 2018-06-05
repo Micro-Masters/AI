@@ -1,3 +1,22 @@
 Tiffany Log 
 
 For the week of 5/15/18 - 5/22/18
+
+- Created layout of the map
+- Started on the creating of rewards.py
+    - need to debug it as some codes provided online were too old and are not supported anymore
+    - gave error on TensorFlow, need to check out the problem
+- Did some research on PPO, PPO2 and TravisCI
+
+Proximal Policy Optimization (PPO)
+－ perform comparably or better than state-of-the-art approaches while being much simpler to implement and tune
+- have some of the benefits of trust region policy optimization (TRPO), but they are much simpler to implement, more general, and have better sample complexity (empirically)
+- code example: https://github.com/openai/baselines/tree/master/baselines/ppo1
+
+https://blog.openai.com/openai-baselines-ppo/
+L^(CLIP)(theta) = hatE_t[min(r_t(theta)hatA_t, clip(r_t(theta), 1 - epsilon, 1 + epsilon) hatA_t)]
+theta = policy parameter
+hatE_t = empirical expectation over timesteps
+r_t = ratio of probability under new and old policies, respectively
+hatA_t = estimated advantage at time t
+epsilon = hyperparameter, usually 0.1 or 0.2
