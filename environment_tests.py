@@ -43,6 +43,7 @@ def test_env(env):
         alt_obs = obs_mod.modify(obs[0], None, alt_obs)
         print("attacking")
         obs = env.step([actions.FunctionCall(_ATTACK_MINIMAP, [_QUEUED, [20, 20]])])
+        print("minimap " + str(np.array(obs[0].observation.feature_minimap['player_relative'])))
         alt_obs = obs_mod.modify(obs[0], None, alt_obs)
         print("no op")
         for i in range(1000):
