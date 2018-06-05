@@ -6,9 +6,16 @@ For the week of 5/30/18 - 6/5/18
 -set up environment
 	-pipe allows for multiple instances of game to run at the same time
 	https://github.com/Micro-Masters/AI/commit/2ed85985a3b2835ab5e44bb176534afa45c350bf#diff-7db128f6b252f1f673a45cc58f79072f
+
 -test to make sure environment actually works
 	-https://github.com/Micro-Masters/AI/commit/4abf5878596b2dc06c09e531df8487107e1867b8#diff-f6b4f402e880c70f4ee78c72869a3720
 
-
-
 note: these commits are to corey's branch, not mine. it was just easier to do this way
+
+
+
+-working on observation modification and reward calculations
+	-https://github.com/Micro-Masters/AI/commit/c6c0a85b8f72ecfa3ee59bed17669bd490e9b994
+
+
+
