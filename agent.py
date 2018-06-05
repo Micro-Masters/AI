@@ -16,12 +16,35 @@ class A2CAgent:
         self.value_loss_coeff = value_loss_coeff
         self.entropy_loss_coeff = entropy_loss_coeff
         self._build()
+
         self._build_ppo()
+
+        A = self.model.pdtype.sample_placeholder([None])
+        ADV = tf.placeholder(tf.float32, [None])
+        R = tf.placeholder(tf.float32, [None])
+        OLDNEGLOGPAC = tf.placeholdeer(tf.float32, [None])
+        OLDVPRED = tf.placeholder(tf.float32, [None])
+        LR = tf.placeholder(tf.float32, [])
+        CLIPRANGE = tf.placeholder(tf.float32, [])
+        neglogpac = self.model.pd.neglogp(A)
+
+        entropy = tf.reduce_mean(self.model.pd.entropy())
+        vpred = self.model.vf
+        vpredclipped = OLDVPRED + tf.clip_by_value(vpred - OLDVPRED,
+                                                   - CLIPRANGE, CLIPRANGE)
+
+        vf_losses1 = tf.square(vpred - R)
+        vf_losses2 = tf.square(vpredclipped - R)
+        vf_loss = 0.5 * tf.reduce_mean(tf.maximum(vf_losses1, vf_losses2))
+        ratio = tf.exp(OLDNEGLOGPAC - neglogpac)
+        pg_losses = -ADV * ratio
+        pg_losses2 = -ADV * tf.clip_by_value(ratio, 1.0 - CLIPRANGE, 1.0 + CLIPRANGE)
+        pg_loss = tf.reduce_mean(tf.maximum(pg_losses, pg_losses2))
 
     def _build_ppo(self):
         self.action, self.value = self._build_model()
         loss = self._build_ppo_loss()
-        LR = tf.placeholder(tf.float32, [])
+
         optimizer = tf.train.AdamOptimizer(learning_rate=LR, epsilon=1e-5)
 
         self.train_operation = tf.layers.optimize_loss(
@@ -55,30 +78,7 @@ class A2CAgent:
 
     # modified from baseline ppo2.py
     def _build_ppo_loss(self):
-        A = self.model.pdtype.sample_placeholder([None])
-        ADV = tf.placeholder(tf.float32, [None])
-        R = tf.placeholder(tf.float32, [None])
-        OLDNEGLOGPAC = tf.placeholdeer(tf.float32, [None])
-        OLDVPRED = tf.placeholder(tf.float32, [None])
-        CLIPRANGE = tf.placeholder(tf.float32, [])
-
-        neglogpac = self.model.pd.neglogp(A)
-        entropy = tf.reduce_mean(self.model.pd.entropy())
-        vpred = self.model.vf
-        vpredclipped = OLDVPRED + tf.clip_by_value(vpred - OLDVPRED,
-                                                   - CLIPRANGE, CLIPRANGE)
-
-        ent_coef = 0.01
-        vf_coef = 0.5
-
-        vf_losses1 = tf.square(vpred - R)
-        vf_losses2 = tf.square(vpredclipped - R)
-        vf_loss = 0.5 * tf.reduce_mean(tf.maximum(vf_losses1, vf_losses2))
-        ratio = tf.exp(OLDNEGLOGPAC - neglogpac)
-        pg_losses = -ADV * ratio
-        pg_losses2 = -ADV * tf.clip_by_value(ratio, 1.0 - CLIPRANGE, 1.0 + CLIPRANGE)
-        pg_loss = tf.reduce_mean(tf.maximum(pg_losses, pg_losses2))
-        loss = pg_loss - entropy * ent_coef + vf_loss * vf_coef
+        loss = pg_loss - entropy * entropy_loss_coeff + vf_loss * value_loss_coeff
 
         return loss
 
@@ -97,11 +97,34 @@ class A2CAgent:
         #entropy_loss = self.entropy_loss_coeff * #TODO
 
         loss = policy_loss + value_loss - entropy_loss
+        self.loss = loss
         return loss
 
     def act(self, observation):
         # TODO: Pass observation into feed_dict below
         return self.sess.run([self.action, self.value])
+
+    def ppo_train(self, states=None):
+            approxkl = .5 * tf.reduce_mean(tf.square(neglogpac - OLDNEGLOGPAC))
+
+            params = tf.trainable_variables()
+            grads = tf.gradients(loss, params)
+            if max_grad_norm is not None:
+                grads, _grad_norm = tf.clip_by_global_norm(grads, max_grad_norm)
+            grads = list(zip(grads, params))
+            _ppo_train = trainer.apply_gradients(grads)
+
+            advs = returns - values
+            advs = (advs - advs.mean()) / (advs.std() + 1e-8)
+
+            obs, returns, masks, actions, values, neglogpacs, states, epinfos = runner.run()
+
+            td_map = {train_model.X: obs, A: actions, ADV: advs, R: returns, LR: LR,
+                      CLIPRANGE: CLIPRANGE, OLDNEGLOGPAC: neglogpacs, OLDVPRED: values}
+
+            return sess.run(
+                [pg_loss, vf_loss, entropy, approxkl, clipfrac, _ppo_train],
+                td_map)[:-1]
 
     # Train the model to minimize loss
     def train(self, observations, actions, rewards, dones, values, next_value):
