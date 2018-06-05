@@ -24,6 +24,14 @@ Minimap
    of the enemies by doing:
 	enemy_y, enemy_x = (obs.observation['feature_minimap'][4] == 4).nonzero()
 
+-  We can also do this to make our agent move the camera towards the enemies using
+   the minimap. Once you find the enemy location you can return
+   actions.FunctionCall(_Move_Camera, [(enemy_x, enemy_y)]
+
+-  You can also attack on the minimap without having to touch the screen. 
+   This can be done with actions.FunctionCall(_Attack_Minimap, [_NOT_QUEUED, 
+   (enemy_x, enemy_y)])
+
 Screen
 
 -  The Screen can be used similarly to the Minimap. However, it also contains more 
@@ -42,4 +50,15 @@ Screen
 -  To access all of the values of player_relative on the screen simply call
 	obs.observation['feature_screen'][5]//notice that the index number is 
         different from the minimap. 
+
+-  Similarly to feature_unit we can get the health of all the units on the screen
+   as well. 
+   This can be done with obs.observation['feature_screen'][8]
+
+-  Moving the camera using the minimap features will change what is displayed
+   on the screen. Therefore, use the move_camera functions in the minimap 
+   in tandem with looking at the observations on the screen to get the most
+   amount of information as possible. 
+
+
  
