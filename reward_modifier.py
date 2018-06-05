@@ -1,3 +1,6 @@
+from pysc2.lib import actions
+import numpy as np
+
 _MOVE_CAMERA = actions.FUNCTIONS.move_camera.id
 _NO_VISIBLE_ENEMY_UNITS_PENALTY = -20 # TODO: change this to be part of config??
 
@@ -20,6 +23,8 @@ class RewardModifier:
         '''find out if the camera has been moved'''
         if self.get_cam_action(new_observation) is True:
             cam_action = True
+        else:
+            cam_action = False
 
         '''calculate change in enemy health to get health reward'''
         # TODO: move below to different function?
@@ -44,17 +49,21 @@ class RewardModifier:
 
 
         '''reward enemy kills'''
-        enemy_kills = self.get_enemy_kills(new_observationold_observation, cam_action)
+        enemy_kills = self.get_enemy_kills(new_observation, old_observation, cam_action)
 
         '''calculate and return modified reward'''
-        return calculate_reward(map_reward, health_reward, zergling_loss, enemy_kills)
+        reward = self.calculate_reward(map_reward, health_reward, zergling_loss, enemy_kills)
+
+        print("reward: ", reward)
+
+        return reward
 
 
 
     '''modify our calculations and the map reward by the values given by config'''
     '''this gives some components of the reward more weight than other components'''
-    def calculate_reward(self, health_reward, zergling_loss, enemy_kills):
-        map_reward = map_reward * config[0]
+    def calculate_reward(self, map_reward, health_reward, zergling_loss, enemy_kills):
+        map_reward = map_reward * self.config[0]
         health_reward = health_reward * self.config[1]
         zergling_loss = zergling_loss * self.config[2]
         enemy_kills = enemy_kills * self.config[3]
@@ -66,7 +75,7 @@ class RewardModifier:
         last_actions = obs.observation.last_actions
         if _MOVE_CAMERA in last_actions:
             return True
-        else
+        else:
             return False
 
     '''gets the average health of enemies'''

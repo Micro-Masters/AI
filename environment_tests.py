@@ -2,7 +2,7 @@ from pysc2.lib import actions
 import time
 import numpy as np
 from observation_modifier import ObservationModifier
-
+from reward_modifier import RewardModifier
 _NO_OP = actions.FUNCTIONS.no_op.id
 _NO_OP_STEP = [actions.FunctionCall(_NO_OP, [])]
 _SELECT_ARMY = actions.FUNCTIONS.select_army.id
@@ -20,38 +20,49 @@ def test_env(env):
     ###for testing purposes only
     counts = np.zeros(1000)
     obs_mod = ObservationModifier(None)
+    reward_mod = RewardModifier([1, 1, 1, 1])
 
+    old_obs = [None]
     obs = env.reset()
-    alt_obs = obs_mod.modify(obs[0], None, None)
+    alt_obs = obs_mod.modify(obs[0], 0, old_obs[0])
+    reward = reward_mod.modify(obs[0], 0, old_obs[0])
 
-    print("friendly_units[0]: ")
-    print("(health, health ratio, x, y)")
-    print(alt_obs[0][0])
-    print("enemy_units: ")
-    print(alt_obs[1])
-    print("army_count: ")
-    print(alt_obs[2])
-    print("available_actions: ")
-    print(alt_obs[3])
+    # print("friendly_units[0]: ")
+    # print("(health, health ratio, x, y)")
+    # print(alt_obs[0][0])
+    # print("enemy_units: ")
+    # print(alt_obs[1])
+    # print("army_count: ")
+    # print(alt_obs[2])
+    # print("available_actions: ")
+    # print(alt_obs[3])
 
     for x in range(2):
         print("no op")
+        old_obs = obs
         obs = env.step(_NO_OP_STEP)
         alt_obs = obs_mod.modify(obs[0], None, alt_obs)
+        reward = reward_mod.modify(obs[0], 0, old_obs[0])
         print("select_army")
+        old_obs = obs
         obs = env.step([actions.FunctionCall(_SELECT_ARMY, [_NOT_QUEUED])])
         alt_obs = obs_mod.modify(obs[0], None, alt_obs)
+        reward = reward_mod.modify(obs[0], 0, old_obs[0])
         print("attacking")
+        old_obs = obs
         obs = env.step([actions.FunctionCall(_ATTACK_MINIMAP, [_QUEUED, [20, 20]])])
-        print("minimap " + str(np.array(obs[0].observation.feature_minimap['player_relative'])))
+        #print("minimap " + str(np.array(obs[0].observation.feature_minimap['player_relative'])))
         alt_obs = obs_mod.modify(obs[0], None, alt_obs)
+        reward = reward_mod.modify(obs[0], 0, old_obs[0])
         print("no op")
         for i in range(1000):
             #check_obs(obs, i, counts)
             if(1%10 == 1):
                 time.sleep(1)
+            old_obs = obs
             obs = env.step(_NO_OP_STEP)
             alt_obs = obs_mod.modify(obs[0], None, alt_obs)
+            reward = reward_mod.modify(obs[0], 0, old_obs[0])
 
 
 def check_obs(obs, i, counts):

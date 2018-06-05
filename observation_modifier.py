@@ -10,12 +10,11 @@ class ObservationModifier:
     def __init__(self, config):
         # TODO: this will be replaced by something more specific
         self.config = config
-        self.reward_mod = RewardModifier(config)
 
     def modify(self, obs, reward, old_observation):
         feature_units = np.array(obs.observation.feature_units)
-        # print("total value units: ", obs.observation.score_cumulative[3])
-        # print("killed value units: ", obs.observation.score_cumulative[5]) #what does this value mean?
+        print("total value units: ", obs.observation.score_cumulative[3])
+        print("killed value units: ", obs.observation.score_cumulative[5]) #what does this value mean?
 
         enemy_units = None
         friendly_units = None
@@ -54,10 +53,8 @@ class ObservationModifier:
         # obs vs which units are in the current obs in order to make the calculations??
 
         # TODO: call reward modifier
-        if old_observation is not None:
-            reward = self.reward_mod.modify(new_observation, reward, old_observation)
-
-        print("reward: ", reward)
+        # if old_observation is not None:
+        #     reward = self.reward_mod.modify(new_observation, reward, old_observation)
 
         return new_observation
 
