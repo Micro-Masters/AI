@@ -34,6 +34,16 @@ ScreenDict = {
     "effects": 16
 }
 
+MinimapDict = {
+    "height_map": 0,
+    "visibility_map": 1,
+    "creep": 2,
+    "camera": 3,
+    "player_id": 4,
+    "player_relative": 5,
+    "selected": 6
+}
+
 class ObservationModifier:
     def __init__(self, config):
         # TODO: this will be replaced by something more specific
