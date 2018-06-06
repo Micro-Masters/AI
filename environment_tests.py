@@ -19,7 +19,15 @@ def test_env(env):
     ###TODO: delete this later
     ###for testing purposes only
     counts = np.zeros(1000)
-    obs_mod = ObservationModifier(None)
+
+    obs_config = {}
+    obs_config["action_ids"] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    obs_config["screen_features"] = ["player_id", "player_relative", "unit_type"]
+    obs_config["minimap_features"] = ["player_id", "selected"]
+    obs_config["nonspatial_features"] = ["player", "score_cumulative"]
+
+
+    obs_mod = ObservationModifier(obs_config)
     reward_mod = RewardModifier([1, 1, 1, 1])
 
     old_obs = [None]
@@ -51,7 +59,7 @@ def test_env(env):
         print("attacking")
         old_obs = obs
         obs = env.step([actions.FunctionCall(_ATTACK_MINIMAP, [_QUEUED, [20, 20]])])
-        #print("minimap " + str(np.array(obs[0].observation.feature_minimap['player_relative'])))
+        #print("minimap " + np.array(obs[0].observation.feature_minimap['player_relative']))
         alt_obs = obs_mod.modify(obs[0], None, alt_obs)
         reward = reward_mod.modify(obs[0], 0, old_obs[0])
         print("no op")
