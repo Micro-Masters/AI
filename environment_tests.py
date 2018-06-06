@@ -22,6 +22,7 @@ def test_env(env):
 
     obs_config = {}
     obs_config["action_ids"] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    #obs_config["action_ids"] = [1, 0, 11, 12, 13, 14, 15, 16, 17, 18]
     obs_config["screen_features"] = ["player_id", "player_relative", "unit_type"]
     obs_config["minimap_features"] = ["player_id", "selected"]
     obs_config["nonspatial_features"] = ["player", "score_cumulative"]

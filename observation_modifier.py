@@ -4,6 +4,7 @@
 # damage taken per unit
 # damage taken total
 import numpy as np
+import enum
 #from reward_modifier import RewardModifier
 
 #TODO: need an array of dictionaries
@@ -12,6 +13,26 @@ import numpy as np
 
 # json file: kinda like a dictionary but not python-related
 # keys and values nested
+
+ScreenDict = {
+    "height_map": 0,
+    "visibility_map": 1,
+    "creep": 2,
+    "power": 3,
+    "player_id": 4,
+    "player_relative": 5,
+    "unit_type": 6,
+    "selected": 7,
+    "unit_hit_points": 8,
+    "unit_hit_points_ratio": 9,
+    "unit_energy": 10,
+    "unit_energy_ratio": 11,
+    "unit_shields": 12,
+    "unit_shields_ratio": 13,
+    "unit_density": 14,
+    "unit_density_aa": 15,
+    "effects": 16
+}
 
 class ObservationModifier:
     def __init__(self, config):
@@ -29,10 +50,11 @@ class ObservationModifier:
             # c = obs.observation["feature_screen"] #['player_id']
             # d = (np.array(c))
             # print(d)
-            # o = (np.array(obs.observation.feature_screen))["player_id"]
+            o = np.array(obs.observation.feature_screen)[ScreenDict["player_id"]]
+            print(o)
             # for i in self.config["screen_features"]:
             #     print("o")
-            obs_dictionary["screen_features"] = [(np.array(obs.observation.feature_screen))[i] for i in self.config["screen_features"]]
+            obs_dictionary["screen_features"] = [(np.array(obs.observation.feature_screen))[ScreenDict(i)] for i in self.config["screen_features"]]
 
         if "minimap_features" in self.config:
             print("parsing minimap features")
@@ -44,12 +66,15 @@ class ObservationModifier:
 
         if "action_ids" in self.config:
             print("parsing action ids")
-            action_ids = []
+            action_ids = list()
             for i in range(len(self.config["action_ids"])):
-                if self.config.action_ids[i] in obs.observation.available_actions:
-                    action_ids = action_ids.append(i)
+                if self.config["action_ids"][i] in obs.observation.available_actions:
+                    action_ids.append(i)
 
             obs_dictionary["action_ids"] = action_ids
+
+        print(obs_dictionary["action_ids"])
+        print(obs_dictionary["nonspatial_features"][1])
 
         return obs_dictionary
 
