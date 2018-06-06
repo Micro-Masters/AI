@@ -6,32 +6,51 @@
 import numpy as np
 from reward_modifier import RewardModifier
 
+_NO_OP = 0
+_MOV_CAM = 1
+_SELECT_POINT = 2
+_SELECT_RECT = 3
+_SELECT_UNIT = 5
+_SELECT_ARMY = 7
+_ATTACK_SCREEN = 12
+_ATTACK_MINIMAP = 13
+_STOP_QUICK = 453
+_SMART_SCREEN = 451
+_SMART_MINIMAP = 452
+_MOVE_SCREEN = 331
+_MOVE_MINIMAP = 332
+
+
 class ObservationModifier:
     def __init__(self, config):
         # TODO: this will be replaced by something more specific
         self.config = config
 
+    def intersection(lst1, lst2):
+        lst3 = [value for value in lst1 if value in lst2]
+        return lst3
+
     def modify(self, obs, reward, old_observation):
         feature_units = np.array(obs.observation.feature_units)
         print("total value units: ", obs.observation.score_cumulative[3])
-        print("killed value units: ", obs.observation.score_cumulative[5]) #what does this value mean?
+        print("killed value units: ", obs.observation.score_cumulative[5])  # what does this value mean?
 
         enemy_units = None
         friendly_units = None
 
-        for i in range(len(feature_units)): ##for all visible units, record info
+        for i in range(len(feature_units)):  ##for all visible units, record info
             unit = np.zeros(4)
-            unit[0] = feature_units[i][2] #health
-            unit[1] = feature_units[i][7] #health ratio
-            unit[2] = feature_units[i][12] #x
-            unit[3] = feature_units[i][13] #y
+            unit[0] = feature_units[i][2]  # health
+            unit[1] = feature_units[i][7]  # health ratio
+            unit[2] = feature_units[i][12]  # x
+            unit[3] = feature_units[i][13]  # y
 
-            if(feature_units[i][11] == 1): #friendly unit #11 = "owner"
+            if (feature_units[i][11] == 1):  # friendly unit #11 = "owner"
                 if friendly_units is None:
                     friendly_units = [unit]
                 else:
                     friendly_units = np.append(friendly_units, [unit], axis=0)
-            else: #enemy unit
+            else:  # enemy unit
                 if enemy_units is None:
                     enemy_units = [unit]
                 else:
@@ -39,25 +58,37 @@ class ObservationModifier:
 
         # TODO: modify available actions
         actions = obs.observation.available_actions
+        print("Actions: ", actions)
+
+        # 0 no_op
+        # 1 move_cam
+        # 2 select_point
+        # 3 select_rect
+        # 5 select_unit
+        # 7 select_army ?
+        # 12 attack_screen
+        # 13 attack_minimap
+        # 453 stop_quick
+        # 451 smart_screen
+        # 452 smart_minimap ?
+        # 331 move_screen
+        # 332 move_minimap
+
+        wantedActions = [_MOV_CAM, _SELECT_POINT, _SELECT_RECT, _SELECT_UNIT, _SELECT_ARMY, _ATTACK_MINIMAP,
+                         _STOP_QUICK, _SMART_SCREEN, _SMART_MINIMAP, _MOVE_SCREEN, _MOVE_MINIMAP]
+
+        actions = self.intersection(actions, wantedActions)
 
         army_count = obs.observation['player'][8]
         new_observation = [friendly_units, enemy_units, army_count, actions]
+        # print("TESTING!")
+        # print(np.array(obs.observation.feature_minimap))
 
         if old_observation is not None:
-            if(new_observation[2] < old_observation[2]):
+            if (new_observation[2] < old_observation[2]):
                 print("Lost ", old_observation[2] - new_observation[2], " zerglings :(")
 
-        # TODO: calculate damage taken by enemy units ("health" above is only for those that are visible?)
-        # possible problem: to calculate damage, we need to compare health at last obs to health at this obs.
-        # but, if some units move out of view, or the camera moves, how do we match up which units were in the previous
-        # obs vs which units are in the current obs in order to make the calculations??
-
-        # TODO: call reward modifier
-        # if old_observation is not None:
-        #     reward = self.reward_mod.modify(new_observation, reward, old_observation)
+        # TODO: All unit coordinates from minimap (if possible figure out how to split between enemy and friendly)
+            # used to determine how many enemy units vs friendly units are on the screen
 
         return new_observation
-
-
-
-
