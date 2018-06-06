@@ -55,10 +55,7 @@ class RewardModifier:
         reward = self.calculate_reward(map_reward, health_reward, zergling_loss, enemy_kills)
 
         print("reward: ", reward)
-
         return reward
-
-
 
     '''modify our calculations and the map reward by the values given by config'''
     '''this gives some components of the reward more weight than other components'''
@@ -124,24 +121,3 @@ class RewardModifier:
 
         return old_enemy_unit_count - new_enemy_unit_count
 
-
-
-        ##old stuff here for reference for now:
-        # damage = 0
-        # if old_observation is not None and old_observation[1] is not None: #isinstance(old_observation, list): # is not None:
-        #     if (len(old_observation[1]) == len(new_observation[1])):
-        #         #calculate damage done
-        #         for i in range(len(old_observation[1])):
-        #             damage += old_observation[1][i][0] - new_observation[1][i][0]  #health change of ith enemy unit
-        #         print("dealt damage: ", damage)
-        #     elif len(old_observation[1]) > len(new_observation[1]):
-        #         print("enemy units died: ", len(old_observation[1]) - len(new_observation[1]))
-
-        ##I think this should be more srtongly weighted
-        #   it is not dependant on camera movement
-        #   more precise than health calculations
-        # if old_observation is not None and (new_observation[2] < old_observation[2]):
-        #     zerglings_lost = old_observation[2] - new_observation[2]
-        #     print("zerglings lost: ", zerglings_lost)
-        #
-        # return reward
