@@ -1,0 +1,15 @@
+Tiffany Log 
+
+For the week of 5/8/18 - 5/15/18
+
+- Downloaded all the packages needed to work on my part (model for close quarter battle), except the A2C package
+	-> got the error of "run.py does not exist" when running the command "python3 run.py my_experiment --map MoveToBeacon"
+	-> it seems like it was because the baseline folder provided on https://github.com/openai/baselines was outdated
+	-> currently finding solution to mitigate the problem
+- Experimented with starcraft map building tools
+- Started tutorials on how to build different types of agents e.g. basic, smart, sparse attak agents using pysc2
+	-> using tutorials on https://github.com/skjb/pysc2-tutorial
+- Read article on how to use A2C
+	-> https://arxiv.org/pdf/1602.01783.pdf'
+- Read article that gives a basic understanding of the difference among Q-Learning, A2C, nerual networks
+	-> https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0
