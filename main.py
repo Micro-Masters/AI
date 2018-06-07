@@ -1,9 +1,8 @@
 import tensorflow as tf
-from runner import A2CRunner
-from agent import A2CAgent
-from random_agent import RandomAgent
-from environment import Environment
-from environment_tests import test_env
+from agent.runner import A2CRunner
+from agent.agent import A2CAgent
+from environment.environment import Environment
+from tests.environment_tests import test_env
 
 
 def main():

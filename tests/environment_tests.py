@@ -1,8 +1,8 @@
 from pysc2.lib import actions
 import time
 import numpy as np
-from observation_modifier import ObservationModifier
-from reward_modifier import RewardModifier
+from agent.modifiers.observation_modifier import ObservationModifier
+from agent.modifiers.reward_modifier import RewardModifier
 _NO_OP = actions.FUNCTIONS.no_op.id
 _NO_OP_STEP = [actions.FunctionCall(_NO_OP, [])]
 _SELECT_ARMY = actions.FUNCTIONS.select_army.id

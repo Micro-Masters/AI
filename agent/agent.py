@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 
-from model import FullyConv
+from agent.model import FullyConv
 
 
 class A2CAgent:

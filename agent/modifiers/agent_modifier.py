@@ -1,5 +1,5 @@
-from observation_modifier import ObservationModifier
-from reward_modifier import RewardModifier
+from agent.modifiers.observation_modifier import ObservationModifier
+from agent.modifiers.reward_modifier import RewardModifier
 
 
 class AgentModifier:
