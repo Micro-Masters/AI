@@ -26,6 +26,7 @@ class A2CAgent:
 
     # Build TensorFlow action (single action from policy) & value operations
     def _build_model(self):
+        # Declare model inputs and initialize model
         observation_shapes = self.agent_modifier.observation_shapes()
         self.screen_input = tf.placeholder(tf.float32, observation_shapes['screen'], 'screen input')
         self.minimap_input = tf.placeholder(tf.float32, observation_shapes['minimap'], 'minimap input')
@@ -34,13 +35,15 @@ class A2CAgent:
 
         model = FullyConv(self.agent_modifier.num_actions, self.use_lstm)
 
+        # Create final action and value operations using model
         policy, value = self.model.build(self.screen_input, self.minimap_input, self.nonspatial_input)
-        #TODO sample action from policy
+        policy_action = model.sample_action(policy)
+        action = self.agent_modifier.make_action(policy_action)
         return action, value
 
     # Build the TensorFlow loss operation
     def _build_optimizer(self):
-        # Tensorflow placeholders
+        # TensorFlow placeholders
         returns = tf.placeholder(tf.float32, [None], 'returns')
         values = tf.placeholder(tf.float32, [None], 'values')
         advantages = tf.stop_gradient(returns - values)
@@ -51,9 +54,9 @@ class A2CAgent:
         value_loss = self.value_loss_coeff * tf.losses.reduce_mean_squared_error(values, returns)
         entropy_loss = self.entropy_loss_coeff * #TODO
 
+        # Create the final optimizer using loss
         loss = policy_loss + value_loss - entropy_loss
         optimizer = tf.train.RMSPropOptimizer(learning_rate=self.learning_rate, decay=0.99, epsilon=1e-5)
-
         return tf.layers.optimize_loss(
             loss=loss,
             global_step=tf.train.get_global_step(),

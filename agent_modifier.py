@@ -7,8 +7,8 @@ class AgentModifier:
         self.observation_modifier = ObservationModifier(config['observations'])
         self.reward_modifier = RewardModifier(config['rewards'])
         self.observation_shapes = self.observation_modifier.shapes
-        self.actions = config['actions']
-        self.num_actions = len(self.actions)
+        self.actions_ids = config['observations']['actions']
+        self.num_actions = len(self.actions_ids)
 
     # Modifies the rewards, takes in arrays of n_envs length (not known)
     def modify_reward(self, observations, rewards, last_observations):
@@ -22,7 +22,7 @@ class AgentModifier:
     def modify_observation(self, observations):
         return [self.observation_modifier.modify(obs) for obs in observations]
 
-    #
-    def make_action(self):
+    # Takes an action number (index in self.actions) and returns the respective PySC2 action
+    def make_action(self, policy_action):
         #TODO take out from policy and make into PySC2 action
         print('Make action')
