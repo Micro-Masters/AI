@@ -106,3 +106,33 @@ class FullyConv:
 
     def _is_spatial_arg(self, name):
         return name == 'screen' or name == 'screen2' or name == 'minimap'
+
+    def get_neg_log_prob(self, action, policy):
+        action_fns, action_args = actions
+        policy_fns, policy_args = policy
+
+        fn_log_prob = self._compute_log_probs(policy_fns, action_fns)
+        log_prob = fn_log_prob
+
+        for arg_type in action_args.keys():
+            action_arg = action_args[arg_type]
+            policy_arg = policy_args[arg_type]
+            arg_log_prob = self._compute_log_probs(policy_arg, action_arg)
+            log_prob += arg_log_prob
+        return log_prob * -1.0
+
+    def _compute_log_prob(probs, labels):
+        # Select arbitrary element for unused arguments (log probs will be masked)
+        labels = tf.maximum(labels, 0)
+        indices = tf.stack([tf.range(tf.shape(labels)[0]), labels], axis=1)
+        return tf.log(tf.clip_by_value(tf.gather_nd(probs, indices), 1e-12, 1.0))
+
+    def get_entropy(self, policy):
+        fns, args = policy
+
+        entropy = -tf.reduce_sum(tf.log(tf.clip_by_value(fns, 1e-12, 1.0)) * fns, axis=-1)
+        for arg_type in args.keys():
+            arg = args[arg_type]
+            arg_entropy = -tf.reduce_sum(tf.log(tf.clip_by_value(arg, 1e-12, 1.0)) * arg, axis=-1)
+            entropy += arg_entropy
+        return entropy

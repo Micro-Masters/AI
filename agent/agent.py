@@ -36,26 +36,30 @@ class A2CAgent:
         self.nonspatial_input = tf.placeholder(tf.float32, observation_shapes['nonspatial'], 'nonspatial input')
         self.available_actions_input = tf.placeholder(tf.float32, observation_shapes['available_actions'], 'available actions input')
 
-        model = FullyConv(self.agent_modifier.num_actions, self.use_lstm, self.agent_modifier.observation_data_format)
+        self.model = FullyConv(self.agent_modifier.num_actions, self.use_lstm, self.agent_modifier.observation_data_format)
 
         # Create final action and value operations using model
-        policy, value = model.build(self.screen_input, self.minimap_input, self.nonspatial_input,
+        policy, value = self.model.build(self.screen_input, self.minimap_input, self.nonspatial_input,
                                     self.available_actions_input, *self.agent_modifier.feature_names)
-        policy_action = model.sample_action(policy)
+        policy_action = self.model.sample_action(policy)
         return policy_action, value
 
     # Build the TensorFlow loss operation
     def _build_optimizer(self):
         # TensorFlow placeholders and compute advantages
-        #TODO actions placeholder
+        fns = tf.placeholder(tf.int32, [None], 'fns')
+        args = {
+            k: tf.placeholder(tf.int32, [None], 'args')
+            for k in self.policy_action[1].keys()}
+        self.actions = (fns, args)
         self.returns = tf.placeholder(tf.float32, [None], 'returns')
         advantages = tf.stop_gradient(self.returns - self.value)
 
         # Create loss TensorFlow operation using placeholders
-        negative_log_policy = #TODO
+        negative_log_policy = self.model.get_neg_log_prob(self.actions, self.policy)
         policy_loss = tf.reduce_mean(advantages * negative_log_policy)
         value_loss = self.value_loss_coeff * tf.losses.reduce_mean_squared_error(self.value, self.returns)
-        entropy_loss = self.entropy_loss_coeff * #TODO
+        entropy_loss = self.entropy_loss_coeff * tf.reduce_mean(self.model.get_entropy(self.policy))
 
         # Create the final optimizer using loss
         loss = policy_loss + value_loss - entropy_loss
