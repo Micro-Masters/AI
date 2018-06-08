@@ -24,7 +24,8 @@ class FullyConv:
             arg_sample = tf.argmax(tf.log(arg_u) / arg_out, axis=1)
             args_sample[arg_type] = arg_sample
 
-        return fn_sample, args_sample
+        policy_action = (fn_sample, args_sample)
+        return policy_action
 
 
     # Build and return the policy and value TensorFlow operations
