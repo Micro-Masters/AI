@@ -1,0 +1,17 @@
+Jeffrey's Log
+
+6/8/18:
+
+- My work was done doing research for the Observations so I moved onto 
+  trying to get unit testing done. 
+
+- Originally I tried getting pytest to work, but I ran into some issues
+  so instead I used they python module unittest. 
+
+- I made unit tests for our observation modifier and reward modifier
+  basically just checking to make sure that the observations are 
+  being changed and the rewards are either changing or staying the 
+  same, because they should be the same with certain actions taken. 
+
+- I also tried to make unit tests for our agent, but since the agent
+  had some problems I was unable to finish the unit tests for it. 
