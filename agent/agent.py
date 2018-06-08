@@ -1,6 +1,8 @@
 import tensorflow as tf
 import numpy as np
 import pandas as pd
+from collections import defaultdict
+
 
 from agent.model import FullyConv
 
@@ -77,11 +79,12 @@ class A2CAgent:
 
     # Train the model to minimize loss
     def train(self, observations, actions, rewards, dones, values, next_value):
-        # TODO pass actions
         observations_feed = self._get_observation_feed(observations, train=True)
+        actions_feed = self._get_action_feed(actions)
         feed_dict = {
             self.returns: self._get_returns(rewards, dones, values, next_value).flatten(),
-            **observations_feed
+            **observations_feed,
+            **actions_feed
         }
         self.sess.run(self.train_operation, feed_dict=feed_dict)
 
@@ -111,3 +114,14 @@ class A2CAgent:
             self.nonspatial_input: observation_input[2],
             self.available_actions: observation_input[3]
         }
+
+    # Join actions into single fn list and single arg map
+    def _get_action_feed(self, actions):
+        fns = []
+        args = defaultdict(list)
+
+        for fn, arg in actions:
+            fns.append(fn)
+            for k, v in arg:
+                args[k].append(v)
+        return {self.action: (np.array(fns).flatten(), args)}
