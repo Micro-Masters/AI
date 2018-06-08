@@ -11,9 +11,15 @@ of war, or resource collection. The tanks on this map are stationary. For
 our project, we were interested in unit micromanagement and less on other
 aspects of gameplay, so this map allows us to focus our model.
 
-![alt text](https://github.com/Micro-Masters/AI/blob/master/misc/Zerg_44_36.png)
-
+Here are some screenshots of part of this map:
 ![alt text](https://github.com/Micro-Masters/AI/blob/master/misc/Zerg_44_36_2.png)
+another screenshot:
+![alt text](https://github.com/Micro-Masters/AI/blob/master/misc/Zerg_44_36.png)
+We also made a map where our agent and the built-in agent have the same
+number of units, all zerglings:
+![alt text](https://github.com/Micro-Masters/AI/blob/master/misc/Zerg_only_44_36.png)
+another screenshot:
+![alt text](https://github.com/Micro-Masters/AI/blob/master/misc/Zerg_only_44_36_2.png)
 
 ## To run our code:
 1. install pysc2 version 2.0
