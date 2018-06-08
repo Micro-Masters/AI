@@ -25,6 +25,7 @@ class A2CAgent:
     def _build(self):
         self.policy, self.action, self.value = self._build_model()
         self.train_operation = self._build_optimizer()
+        self.sess.run(tf.global_variables_initializer())
 
     # Build TensorFlow action (single action from policy) & value operations
     def _build_model(self):
