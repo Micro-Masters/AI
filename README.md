@@ -3,20 +3,26 @@ This is our final project for ECS 170 Spring 2018 at UC Davis
 
 ## Project Goal
 We wanted to build a bot to micromanage army units. Our model uses a deep
-reinforcement learning algorithm called A2C to try to achieve this.
+reinforcement learning algorithm called A2C and the FullyConv model to try to achieve this.
+More generally, we wished to build a customizable system so that it can easily be adapted.
+We achieve this customization through config.json files (or strings) that define what
+observations, rewards, and actions the bot will consider while training. Similarly, all
+advanced training settings, map files, and more can be set as well.
 
 ### References
 We refered to these repos when considering designs for our project:
-1. https://github.com/openai/baselines/blob/master/baselines/common/vec_env/subproc_vec_env.py
-2. https://github.com/simonmeister/pysc2-rl-agents/blob/master/rl/environment.py
+1. https://github.com/openai/baselines/blob/master/baselines/
+2. https://github.com/simonmeister/pysc2-rl-agents/
 3. https://github.com/deepmind/pysc2/blob/master/pysc2/env/sc2_env.py
-4. Other pysc2 git repos too, but above is the main one
+4. Other pysc2 git repos as well, but the above are the primary main ones
 
 ### Our Map
-We tested and trained on a simplified map. This map has no buildings, fog
-of war, or resource collection. The tanks on this map are stationary. For
-our project, we were interested in unit micromanagement and less on other
-aspects of gameplay, so this map allows us to focus our model.
+We tested and trained on a simplified map. This map has no buildings, fog of war, or
+resource collection. The tanks on this map are forced stationary and other units kept equal
+between players same. For our project, we were interested in unit micromanagement and less
+on other aspects of gameplay, so this map allows us to focus our model. It should be noted
+that our AI can run any map file with a built in reward and even apply our own reward
+calculations to any map.
 
 #### Zerg_44_36
 Here are some screenshots of part of this map:
@@ -32,11 +38,13 @@ another screenshot:
 ![alt text](https://github.com/Micro-Masters/AI/blob/master/misc/Zerg_only_44_36_2.png)
 
 ## To run our code:
-1. install pysc2 version 2.0
-2. follow instructions on pysc2 website to install Starcraft (latest)
-3. install tensorflow (1.8.0)
-4. install numpy (1.14.2)
-5. run: `python3 main.py` (3.5.6)
+1. install pysc2 version 2.0 (from their git repo)
+2. follow instructions on pysc2 website to install Starcraft 2 (latest)
+3. install tensorflow gpu (1.8.0)
+4. install numpy (1.14.2, should come with tensorflow)
+5. run: `python3 main.py` (on 3.5+)
+
+>Do note while all code is complete, there are a few unresolved bugs
 
 ## Test Files
 
@@ -48,6 +56,7 @@ To run our test files, uncomment line 30 in main.py:
 
 This tester shows that we are able to correctly set up the environment for
 pysc2 and launch starcraft game instances. Here we are hard-coding actions,
-but we are able to correctly parse observations and modify rewards. Once our
-A2C model is working, these will be fed into the model.
+but we are able to correctly parse observations and modify rewards. These can
+be fed into the model.
 
+In addition, actual unit tests can be found in the `tests/` folder as well.
