@@ -1,6 +1,8 @@
 # ECS170 Final Project
 This is our final project for ECS 170 Spring 2018 at UC Davis
 
+**Note to graders:** All logic has been implemented but a few bugs in the middle of the act/train step are preventing the entire model and from working. Environment and observation/reward modifiers are fully functional individually, it is just this training bug causing an issue.
+
 ## Project Goal
 We wanted to build a bot to micromanage army units. Our model uses a deep
 reinforcement learning algorithm called A2C and the FullyConv model to try to achieve this.
