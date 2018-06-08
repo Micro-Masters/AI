@@ -1,0 +1,80 @@
+   0/no_op                                              ()
+   1/move_camera                                        (1/minimap [64, 64])
+   2/select_point                                       (6/select_point_act [4]; 0/screen [84, 84])
+   3/select_rect                                        (7/select_add [2]; 0/screen [84, 84]; 2/screen2 [84, 84])
+   4/select_control_group                               (4/control_group_act [5]; 5/control_group_id [10])
+   5/select_unit                                        (8/select_unit_act [4]; 9/select_unit_id [500])
+   6/select_idle_worker                                 (10/select_worker [4])
+   7/select_army                                        (7/select_add [2])
+   
+  
+  12/Attack_screen                                      (3/queued [2]; 0/screen [84, 84])
+  13/Attack_minimap                                     (3/queued [2]; 1/minimap [64, 64])
+  14/Attack_Attack_screen                               (3/queued [2]; 0/screen [84, 84])
+  15/Attack_Attack_minimap                              (3/queued [2]; 1/minimap [64, 64])
+  
+  18/Attack_Redirect_screen                             (3/queued [2]; 0/screen [84, 84])
+  19/Scan_Move_screen                                   (3/queued [2]; 0/screen [84, 84])
+  20/Scan_Move_minimap                                  (3/queued [2]; 1/minimap [64, 64])
+  
+  
+ 
+ 140/Cancel_quick                                       (3/queued [2])
+
+
+ 148/Cancel_LockOn_quick                                (3/queued [2])
+ 
+ 
+ 168/Cancel_Last_quick                                  (3/queued [2])
+ 
+ 170/Cancel_Queue1_quick                                (3/queued [2])
+ 171/Cancel_Queue5_quick                                (3/queued [2])
+ 172/Cancel_QueueAddOn_quick                            (3/queued [2])
+ 173/Cancel_QueueCancelToSelection_quick                (3/queued [2])
+ 174/Cancel_QueuePasive_quick                           (3/queued [2])
+ 175/Cancel_QueuePassiveCancelToSelection_quick         (3/queued [2])
+ 
+ 
+ 261/Halt_quick                                         (3/queued [2])
+ 262/Halt_Building_quick                                (3/queued [2])
+ 263/Halt_TerranBuild_quick                             (3/queued [2])
+ 
+ 274/HoldPosition_quick                                 (3/queued [2])
+
+ //Unknown Action
+ 275/Land_screen                                        (3/queued [2]; 0/screen [84, 84])
+ 
+
+  //Unknown Action
+ 281/Lift_quick                                         (3/queued [2])
+ 
+
+  //Unknown Action
+ 287/Load_screen                                        (3/queued [2]; 0/screen [84, 84])
+ 
+ 294/LoadAll_quick                                      (3/queued [2])
+ 295/LoadAll_CommandCenter_quick                        (3/queued [2])
+
+ 331/Move_screen                                        (3/queued [2]; 0/screen [84, 84])
+ 332/Move_minimap                                       (3/queued [2]; 1/minimap [64, 64])
+ 333/Patrol_screen                                      (3/queued [2]; 0/screen [84, 84])
+ 334/Patrol_minimap                                     (3/queued [2]; 1/minimap [64, 64])
+  
+ //Unknown Action
+ 335/Rally_Units_screen                                 (3/queued [2]; 0/screen [84, 84])
+ 336/Rally_Units_minimap                                (3/queued [2]; 1/minimap [64, 64])
+ 
+ 
+ 451/Smart_screen                                       (3/queued [2]; 0/screen [84, 84])
+ 452/Smart_minimap                                      (3/queued [2]; 1/minimap [64, 64])
+ 453/Stop_quick                                         (3/queued [2])
+ 454/Stop_Building_quick                                (3/queued [2])
+ 455/Stop_Redirect_quick                                (3/queued [2])
+ 456/Stop_Stop_quick                                    (3/queued [2])
+ 
+  //Unknown Action
+ 511/UnloadAll_quick                                    (3/queued [2])
+ 
+ 516/UnloadAllAt_screen                                 (3/queued [2]; 0/screen [84, 84])
+ 517/UnloadAllAt_minimap                                (3/queued [2]; 1/minimap [64, 64])
+ 

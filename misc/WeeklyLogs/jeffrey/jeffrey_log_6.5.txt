@@ -1,0 +1,27 @@
+Jeffrey's Log
+
+6/5/18:
+
+- Created a script that moves the camera to where the
+  enemy location is. This is going to be used so that we
+  can move the camera with our bot in order to collect
+  information on the enemy and help our bot make decisions
+
+- Expanded guide for how to interface with the observations
+  and actions so that we could go into having our bot make
+  smart decisions.
+
+- Honestly kind of back-pedaled this week. I was completely
+  focused on how the observations and actions worked in the 
+  tutorial bots that we made, so when we moved on to our 
+  bot and the observations were extracted differenly I was 
+  completely thrown off. 
+  My teammates figured out how to get the feature_units,
+  but we still need to be able to move the screen around and
+  such, so we'll need to figure out how to access the minimap.
+
+- For right now the only observations we can easily get are 
+  Available_Actions, Last_Actions, and feature_units.
+
+- This week I'll need to do some research into how to get the 
+  rest of the units. 
