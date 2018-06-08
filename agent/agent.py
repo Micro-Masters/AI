@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
-import pandas as pd
 from collections import defaultdict
+from tensorflow.contrib import layers
 
 
 from agent.model import FullyConv
@@ -10,7 +10,7 @@ from agent.model import FullyConv
 class A2CAgent:
     def __init__(
             self, sess, agent_modifier, use_lstm=False, discount=.99, value_loss_coeff=.5,
-            entropy_loss_coeff=.001, learning_rate=1e-4, max_gradient_norm=1):
+            entropy_loss_coeff=.001, learning_rate=1e-4, max_gradient_norm=1.0):
         self.sess = sess
         self.use_lstm = use_lstm
         self.agent_modifier = agent_modifier
@@ -23,7 +23,7 @@ class A2CAgent:
 
     # Build and initialize the TensorFlow graph
     def _build(self):
-        self.policy, self.value = self._build_model()
+        self.policy, self.action, self.value = self._build_model()
         self.train_operation = self._build_optimizer()
         self.sess.run(tf.global_variables_initializer())
 
@@ -44,8 +44,8 @@ class A2CAgent:
         # Create final action and value operations using model
         policy, value = self.model.build(self.screen_input, self.minimap_input, self.nonspatial_input,
                                     self.available_mask_input, *self.agent_modifier.feature_names)
-        policy_action = self.model.sample_action(policy)
-        return policy_action, value
+        action = self.model.sample_action(policy)
+        return policy, action, value
 
     # Build the TensorFlow loss operation
     def _build_optimizer(self):
@@ -61,13 +61,13 @@ class A2CAgent:
         # Create loss TensorFlow operation using placeholders
         negative_log_policy = self.model.get_neg_log_prob(self.actions, self.policy)
         policy_loss = tf.reduce_mean(advantages * negative_log_policy)
-        value_loss = self.value_loss_coeff * tf.losses.reduce_mean_squared_error(self.value, self.returns)
+        value_loss = self.value_loss_coeff * tf.reduce_mean(tf.square(self.value - self.returns))
         entropy_loss = self.entropy_loss_coeff * tf.reduce_mean(self.model.get_entropy(self.policy))
 
         # Create the final optimizer using loss
         loss = policy_loss + value_loss - entropy_loss
         optimizer = tf.train.RMSPropOptimizer(learning_rate=self.learning_rate, decay=0.99, epsilon=1e-5)
-        return tf.layers.optimize_loss(
+        return layers.optimize_loss(
             loss=loss,
             global_step=tf.train.get_global_step(),
             learning_rate=None,
@@ -82,7 +82,8 @@ class A2CAgent:
     # Take an observation (n_envs length array) and return the action, value
     def act(self, observation):
         feed_dict = self._get_observation_feed(observation)
-        return self.sess.run([self.policy, self.value], feed_dict=feed_dict)
+        action, value = self.sess.run([self.action, self.value], feed_dict=feed_dict)
+        return action, value
 
     # Train the model to minimize loss
     def train(self, observations, actions, rewards, dones, values, next_value):
@@ -112,14 +113,23 @@ class A2CAgent:
             new_observations = [self.agent_modifier.modify_observations(obs) for obs in observation]
             new_observation = new_observations.reshape(-1, *new_observations.shape[1:])
         else:
-            new_observation = self.agent_modifier.modify_observations(observation)
+            new_observation = self.agent_modifier.modify_observation(observation)
         # Convert array of dictionaries to array of arrays
-        observation_input = pd.DataFrame(new_observation).values()
+        observation_input = []
+        for obs_dict in new_observation:
+            obs = [np.array(v) for k, v in obs_dict.items()]
+            observation_input.append(obs)
+        observation_input = np.array(observation_input)
+        print(observation_input.shape)
+        observation_input = np.transpose(observation_input)
+        print(observation_input.shape)
+        print(len(observation_input[0]))
+
         return {
             self.screen_input: observation_input[0],
             self.minimap_input: observation_input[1],
             self.nonspatial_input: observation_input[2],
-            self.available_actions: observation_input[3]
+            self.available_mask_input: observation_input[3]
         }
 
     # Join actions into single fn list and single arg map

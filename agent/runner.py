@@ -7,7 +7,11 @@ class A2CRunner:
         self.env = env
         self.n_updates = n_updates
         self.n_steps = n_steps
-        self.observation = None
+        self.observation = self.env.reset()
+        self.reset()
+
+    def reset(self):
+        self.observation = self.env.reset()
 
     # Begin running and learning (if desired)!
     def begin(self):

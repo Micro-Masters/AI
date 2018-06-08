@@ -100,7 +100,7 @@ class FullyConv:
 
     def _mask(self, policy, available_mask):
         policy *= available_mask
-        return policy / tf.clip_by_value(tf.reduce_sum(policy, axis=1, keep_dims=True), 1e-12, 1.0)
+        return policy / tf.clip_by_value(tf.reduce_sum(policy, axis=1, keepdims=True), 1e-12, 1.0)
 
     def _is_spatial_arg(self, name):
         return name == 'screen' or name == 'screen2' or name == 'minimap'
@@ -115,7 +115,7 @@ class FullyConv:
         for arg_type in action_args.keys():
             action_arg = action_args[arg_type]
             policy_arg = policy_args[arg_type]
-            arg_log_prob = self._compute_log_probs(policy_arg, action_arg)
+            arg_log_prob = self._compute_log_prob(policy_arg, action_arg)
             log_prob += arg_log_prob
         return log_prob * -1.0
 

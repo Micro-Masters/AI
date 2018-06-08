@@ -55,7 +55,7 @@ class ObservationModifier:
         }
         self.data_format = 'NCHW'
 
-    def modify(self, obs, reward, old_observation):
+    def modify(self, obs):
         print("observation modifier")
         obs_dictionary = {}
 
