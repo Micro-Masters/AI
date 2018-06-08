@@ -1,0 +1,29 @@
+Feature Units
+
+-  Feature Units is a newly added observation that we can
+   use to check the stats of the units that appear on the
+   screen. 
+
+-  There are 25 stats that the feature_units show us,
+   but we only need a couple. 
+
+-  The stats that are important to us are the 
+   health and the alliance. 
+
+-  Alliance is the same thing as the player_relative 
+   value used in the other observations. 
+
+-  We can access feature unit the same way that we access
+   the other observations.
+   obs.observation['feature_unit'] and to get health we do
+   obs.observation['feature_unit'][2] and to get alliance
+   obs.observation['feature_unit'][1]
+
+-  Using feature unit is easier than trying to select the
+   enemies in order to get their health. 
+
+-  This way we only need to look at the enemies in order to 
+   get their health. 
+
+-  To find out if the units are allied with the enemy 
+   simply do obs.observation['feature_unit'][1] == 4
