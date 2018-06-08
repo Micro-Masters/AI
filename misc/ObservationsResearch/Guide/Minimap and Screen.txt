@@ -1,0 +1,64 @@
+Minimap
+
+-  The minimap shows all the units that can currently
+   be seen through the fog of war. The minimap is also
+   a tensor that shows [height_map, visibility, creep, 
+   camera, player_id, player_relative, selected] 
+
+-  The elements important to us are the player_relative 
+   values and the selected values. 
+
+-  Unlike the Multi-Select and Single-Select tensors, the
+   elements in the Minimap are all separated into their own 
+   arrays. I can access all of the values of player relative with
+   obs.observation['feature_minimap'][4] 
+   This will give me the individual values of all units on the map
+   and I will be able to see if they are enemy units or my units. 
+
+-  One easy way cut the array down to just enemy units is to call .nonzero()
+   (obs.observation['feature_minimap'][4] == 4).nonzero() will return all
+   entries that are nonzero and are equal to the number 4 which indicates
+   the unit is an enemy unit. 
+
+-  The "smart attacking agent" tutorial we used even found the locations
+   of the enemies by doing:
+	enemy_y, enemy_x = (obs.observation['feature_minimap'][4] == 4).nonzero()
+
+-  We can also do this to make our agent move the camera towards the enemies using
+   the minimap. Once you find the enemy location you can return
+   actions.FunctionCall(_Move_Camera, [(enemy_x, enemy_y)]
+
+-  You can also attack on the minimap without having to touch the screen. 
+   This can be done with actions.FunctionCall(_Attack_Minimap, [_NOT_QUEUED, 
+   (enemy_x, enemy_y)])
+
+Screen
+
+-  The Screen can be used similarly to the Minimap. However, it also contains more 
+   information than the minimap. 
+
+-  The Screen has a tensor larger than the minimap conatining: [height_map, visibility, creep, power,
+   player_id, player_relative, unit_type, selected, hit_points, energy, shields, 
+   unit_density, unit_density_aa
+
+-  Again, the values that are important to us on the screen are player_relative, 
+   selected, and hit_points.
+
+-  Also, similarly to the minimap the indexes of the tensor are their own tensors that 
+   contain the values of all the units for the specified tensor. 
+
+-  To access all of the values of player_relative on the screen simply call
+	obs.observation['feature_screen'][5]//notice that the index number is 
+        different from the minimap. 
+
+-  Similarly to feature_unit we can get the health of all the units on the screen
+   as well. 
+   This can be done with obs.observation['feature_screen'][8]
+
+-  Moving the camera using the minimap features will change what is displayed
+   on the screen. Therefore, use the move_camera functions in the minimap 
+   in tandem with looking at the observations on the screen to get the most
+   amount of information as possible. 
+
+
+ 
