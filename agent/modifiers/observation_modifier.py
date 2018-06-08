@@ -52,7 +52,7 @@ class ObservationModifier:
             'minimap': [len(config['minimap_features']), resolution_size, resolution_size],
             'nonspatial': [len(config['nonspatial_features']), resolution_size, resolution_size]
         }
-        self.data_format = 'channels_first'
+        self.data_format = 'NCHW'
 
     def modify(self, obs, reward, old_observation):
         print("observation modifier")

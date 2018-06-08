@@ -6,8 +6,11 @@ class AgentModifier:
     def __init__(self, config, resolution_size):
         self.observation_modifier = ObservationModifier(config['observations'], resolution_size)
         self.reward_modifier = RewardModifier(config['rewards'])
-        self.actions_ids = config['observations']['actions']
+        self.action_ids = config['observations']['actions']
         self.num_actions = len(self.actions_ids)
+        self.feature_names = [config['observations']['screen_features'],
+                              config['observations']['minimap_features'],
+                              config['observations']['nonspatial_features']]
         self.observation_shapes = self.observation_modifier.shapes
         self.observation_data_format = self.observation_modifier.data_format
 

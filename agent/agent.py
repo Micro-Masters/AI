@@ -21,7 +21,7 @@ class A2CAgent:
 
     # Build and initialize the TensorFlow graph
     def _build(self):
-        self.action, self.value = self._build_model()
+        self.policy, self.action, self.value = self._build_model()
         self.train_operation = self._build_optimizer()
 
     # Build TensorFlow action (single action from policy) & value operations
@@ -37,10 +37,11 @@ class A2CAgent:
         model = FullyConv(self.agent_modifier.num_actions, self.use_lstm, self.agent_modifier.observation_data_format)
 
         # Create final action and value operations using model
-        policy, value = self.model.build(self.screen_input, self.minimap_input, self.nonspatial_input)
+        policy, value = model.build(self.screen_input, self.minimap_input, self.nonspatial_input,
+                                    self.available_actions_input, *self.agent_modifier.feature_names)
         policy_action = model.sample_action(policy)
         action = self.agent_modifier.make_action(policy_action)
-        return action, value
+        return policy, action, value
 
     # Build the TensorFlow loss operation
     def _build_optimizer(self):
