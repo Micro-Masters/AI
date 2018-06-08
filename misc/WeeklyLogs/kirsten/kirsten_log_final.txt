@@ -1,0 +1,16 @@
+Kirsten's Log 
+
+-json file set-up:
+	https://github.com/Micro-Masters/AI/commit/73c2c9a57ce3028af30d21bb264714cbbfd0778b
+
+-zeg-only map
+	https://github.com/Micro-Masters/AI/commit/4cbc2acd8380d9c282c87deffc54852cdd06ded6
+
+-more observation work:
+	https://github.com/Micro-Masters/AI/commit/740c713bdf9fd4ce65bc024e5cc0428de84127db
+	https://github.com/Micro-Masters/AI/commit/810d08194c6b02bdb7702b93735495944be8984b
+	https://github.com/Micro-Masters/AI/commit/d099c3ec8ea709ad371a5accc8a2e80129ec06ca
+	https://github.com/Micro-Masters/AI/commit/9d05e0abd6091dc75a5ce1262b330d6c4c813a71
+
+
+
