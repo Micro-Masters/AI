@@ -45,9 +45,14 @@ MinimapDict = {
 }
 
 class ObservationModifier:
-    def __init__(self, config):
-        # TODO: this will be replaced by something more specific
+    def __init__(self, config, resolution_size):
         self.config = config #dictionary
+        self.shapes = {
+            'screen': [len(config['screen_features']), resolution_size, resolution_size],
+            'minimap': [len(config['minimap_features']), resolution_size, resolution_size],
+            'nonspatial': [len(config['nonspatial_features']), resolution_size, resolution_size]
+        }
+        self.data_format = 'NCHW'
 
     def modify(self, obs, reward, old_observation):
         print("observation modifier")
