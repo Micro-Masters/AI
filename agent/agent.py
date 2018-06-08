@@ -40,8 +40,7 @@ class A2CAgent:
         policy, value = model.build(self.screen_input, self.minimap_input, self.nonspatial_input,
                                     self.available_actions_input, *self.agent_modifier.feature_names)
         policy_action = model.sample_action(policy)
-        action = self.agent_modifier.make_action(policy_action)
-        return policy, action, value
+        return policy_action, value
 
     # Build the TensorFlow loss operation
     def _build_optimizer(self):
@@ -67,9 +66,12 @@ class A2CAgent:
             clip_gradients=self.max_gradient_norm,
             name="train_operation")
 
+    # Convert policy action syntax to a PySC2 FunctionCall action
+    def convert_action(self, policy_action):
+        return self.agent_modifier.make_action(policy_action)
+
     # Take an observation (n_envs length array) and return the action, value
     def act(self, observation):
-        #TODO also return log prob for action?
         feed_dict = self._get_observation_feed(observation)
         return self.sess.run([self.action, self.value], feed_dict=feed_dict)
 
