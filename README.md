@@ -18,13 +18,13 @@ of war, or resource collection. The tanks on this map are stationary. For
 our project, we were interested in unit micromanagement and less on other
 aspects of gameplay, so this map allows us to focus our model.
 
-Zerg_44_36
+#### Zerg_44_36
 Here are some screenshots of part of this map:
 ![alt text](https://github.com/Micro-Masters/AI/blob/master/misc/Zerg_44_36_2.png)
 another screenshot:
 ![alt text](https://github.com/Micro-Masters/AI/blob/master/misc/Zerg_44_36.png)
 
-Zerg_only_44_36
+#### Zerg_only_44_36
 We also made a map where our agent and the built-in agent have the same
 number of units, all zerglings:
 ![alt text](https://github.com/Micro-Masters/AI/blob/master/misc/Zerg_only_44_36.png)
