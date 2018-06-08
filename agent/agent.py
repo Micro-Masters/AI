@@ -26,14 +26,15 @@ class A2CAgent:
 
     # Build TensorFlow action (single action from policy) & value operations
     def _build_model(self):
-        # Declare model inputs and initialize model
-        observation_shapes = self.agent_modifier.observation_shapes()
+        # Declare model inputs (of any number of observations) and initialize model
+        observation_shapes = {v.insert(0, None)
+                              for k, v in self.self.agent_modifier.observation_shapes.items()}
         self.screen_input = tf.placeholder(tf.float32, observation_shapes['screen'], 'screen input')
         self.minimap_input = tf.placeholder(tf.float32, observation_shapes['minimap'], 'minimap input')
         self.nonspatial_input = tf.placeholder(tf.float32, observation_shapes['nonspatial'], 'nonspatial input')
         self.available_actions_input = tf.placeholder(tf.float32, observation_shapes['available_actions'], 'available actions input')
 
-        model = FullyConv(self.agent_modifier.num_actions, self.use_lstm)
+        model = FullyConv(self.agent_modifier.num_actions, self.use_lstm, self.agent_modifier.observation_data_format)
 
         # Create final action and value operations using model
         policy, value = self.model.build(self.screen_input, self.minimap_input, self.nonspatial_input)
@@ -43,15 +44,15 @@ class A2CAgent:
 
     # Build the TensorFlow loss operation
     def _build_optimizer(self):
-        # TensorFlow placeholders
+        # TensorFlow placeholders and compute advantages
+        #TODO actions placeholder
         self.returns = tf.placeholder(tf.float32, [None], 'returns')
-        self.values = tf.placeholder(tf.float32, [None], 'values')
-        advantages = tf.stop_gradient(self.returns - self.values)
+        advantages = tf.stop_gradient(self.returns - self.value)
 
         # Create loss TensorFlow operation using placeholders
         negative_log_policy = #TODO
         policy_loss = tf.reduce_mean(advantages * negative_log_policy)
-        value_loss = self.value_loss_coeff * tf.losses.reduce_mean_squared_error(self.values, self.returns)
+        value_loss = self.value_loss_coeff * tf.losses.reduce_mean_squared_error(self.value, self.returns)
         entropy_loss = self.entropy_loss_coeff * #TODO
 
         # Create the final optimizer using loss
@@ -68,16 +69,15 @@ class A2CAgent:
     # Take an observation (n_envs length array) and return the action, value
     def act(self, observation):
         #TODO also return log prob for action?
-        feed_dict = self._get_observations_feed(observation)
+        feed_dict = self._get_observation_feed(observation)
         return self.sess.run([self.action, self.value], feed_dict=feed_dict)
 
     # Train the model to minimize loss
     def train(self, observations, actions, rewards, dones, values, next_value):
-        # TODO use log prob for action or pass actions
-        observations_feed = self._get_observations_feed(observations)
+        # TODO pass actions
+        observations_feed = self._get_observation_feed(observations, train=True)
         feed_dict = {
             self.returns: self._get_returns(rewards, dones, values, next_value).flatten(),
-            self.values: values.flatten(),
             **observations_feed
         }
         self.sess.run(self.train_operation, feed_dict=feed_dict)
@@ -93,14 +93,18 @@ class A2CAgent:
         return returns
 
     # Modify PySC2 observations and then return the observation input feed
-    def _get_observations_feed(self, observations):
+    def _get_observation_feed(self, observation, train=False):
         # Convert PySC2 observations to an array of dictionaries
-        new_observations = self.agent_modifier.modify_observations(observations)
+        if train:
+            new_observations = [self.agent_modifier.modify_observations(obs) for obs in observation]
+            new_observation = new_observations.reshape(-1, *new_observations.shape[1:])
+        else:
+            new_observation = self.agent_modifier.modify_observations(observation)
         # Convert array of dictionaries to array of arrays
-        observations_input = pd.DataFrame(new_observations).values()
+        observation_input = pd.DataFrame(new_observation).values()
         return {
-            self.screen_input: observations_input[0],
-            self.minimap_input: observations_input[1],
-            self.nonspatial_input: observations_input[2],
-            self.available_actions: observations_input[3]
+            self.screen_input: observation_input[0],
+            self.minimap_input: observation_input[1],
+            self.nonspatial_input: observation_input[2],
+            self.available_actions: observation_input[3]
         }

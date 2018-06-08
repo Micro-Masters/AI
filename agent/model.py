@@ -2,7 +2,7 @@ import tensorflow as tf
 
 #TODO don't forget to set unavailable policy actions to 0 and rescale
 class FullyConv:
-    def __init__(self, num_actions, use_lstm, input_data_format='NHWC', use_data_format='NCHW'):
+    def __init__(self, num_actions, use_lstm, input_data_format, use_data_format='channels_first'):
         self.num_actions = num_actions
         self.use_lstm = use_lstm
         self.input_data_format = input_data_format
@@ -23,14 +23,9 @@ class FullyConv:
 
     # Convert to the other data format
     def _switch_data_format(self, input_array):
-        if self.input_data_format == 'NHWC':
+        if self.input_data_format == 'channels_last':
             # Convert from NHWC to NCHW
             return tf.transpose(input_array, [0, 3, 1, 2])
         else:
             # Convert from NCHW to NHWC
             return tf.transpose(input_array, [0, 2, 3, 1])
-
-    def _build_cnn_block(self):
-
-    def _build_nonspatial_block(self):
-

@@ -3,12 +3,13 @@ from agent.modifiers.reward_modifier import RewardModifier
 
 
 class AgentModifier:
-    def __init__(self, config):
-        self.observation_modifier = ObservationModifier(config['observations'])
+    def __init__(self, config, resolution_size):
+        self.observation_modifier = ObservationModifier(config['observations'], resolution_size)
         self.reward_modifier = RewardModifier(config['rewards'])
-        self.observation_shapes = self.observation_modifier.shapes
         self.actions_ids = config['observations']['actions']
         self.num_actions = len(self.actions_ids)
+        self.observation_shapes = self.observation_modifier.shapes
+        self.observation_data_format = self.observation_modifier.data_format
 
     # Modifies the rewards, takes in arrays of n_envs length (not known)
     def modify_reward(self, observations, rewards, last_observations):
