@@ -15,7 +15,7 @@ _SELECT_ALL = [2]
 this test is just to make sure that the environment is set up correctly, 
 without the need to test through the runner or the agent.
 """
-def test_env(env):
+def test_env(env, config):
     ###TODO: delete this later
     ###for testing purposes only
     counts = np.zeros(1000)
@@ -28,8 +28,10 @@ def test_env(env):
     obs_config["nonspatial_features"] = ["player", "score_cumulative"]
 
 
-    obs_mod = ObservationModifier(obs_config)
-    reward_mod = RewardModifier([1, 1, 1, 1])
+    #obs_mod = ObservationModifier(obs_config)
+    obs_mod = ObservationModifier(config["observations"])
+    #reward_mod = RewardModifier([1, 1, 1, 1])
+    reward_mod = RewardModifier(config["rewards"])
 
     old_obs = [None]
     obs = env.reset()
@@ -72,6 +74,8 @@ def test_env(env):
             obs = env.step(_NO_OP_STEP)
             alt_obs = obs_mod.modify(obs[0], None, alt_obs)
             reward = reward_mod.modify(obs[0], 0, old_obs[0])
+            for i in alt_obs["minimap_features"][0]:
+                print(i)
 
 
 def check_obs(obs, i, counts):
