@@ -10,7 +10,7 @@ We refered to these repos when considering designs for our project:
 1. https://github.com/openai/baselines/blob/master/baselines/common/vec_env/subproc_vec_env.py
 2. https://github.com/simonmeister/pysc2-rl-agents/blob/master/rl/environment.py
 3. https://github.com/deepmind/pysc2/blob/master/pysc2/env/sc2_env.py
-4. other pysc2 git repos too, but above is the main one
+4. Other pysc2 git repos too, but above is the main one
 
 ### Our Map
 We tested and trained on a simplified map. This map has no buildings, fog
@@ -33,17 +33,18 @@ another screenshot:
 
 ## To run our code:
 1. install pysc2 version 2.0
-2. follow instructions on pysc2 website to install Starcraft
-3. install tensorflow
-4. install numpy
-5. run: python3 main.py
+2. follow instructions on pysc2 website to install Starcraft (latest)
+3. install tensorflow (1.8.0)
+4. install numpy (1.14.2)
+5. run: `python3 main.py` (3.5.6)
 
 ## Test Files
 
 To run our test files, uncomment line 30 in main.py:
-'''py
+
+```py
     #test_env(env, config)
-'''
+```
 
 This tester shows that we are able to correctly set up the environment for
 pysc2 and launch starcraft game instances. Here we are hard-coding actions,
