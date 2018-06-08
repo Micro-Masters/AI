@@ -49,5 +49,5 @@ To run our test files, uncomment line 30 in main.py:
 This tester shows that we are able to correctly set up the environment for
 pysc2 and launch starcraft game instances. Here we are hard-coding actions,
 but we are able to correctly parse observations and modify rewards. Once our
-A2C model is working, these will be fed into the model. 
+A2C model is working, these will be fed into the model.
 
