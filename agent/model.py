@@ -36,15 +36,16 @@ class FullyConv:
 
     # Process/build spatial feature layers
     def _build_cnn_block(self, input, all_features, our_features):
-        features = tf.split(input, input.shape[1], axis=1)
-        for i, feat in enumerate(features):
-            type = getattr(all_features, our_features[i]).type
+        feature_layers = tf.split(input, input.shape[1], axis=1)
+        for i, feat in enumerate(feature_layers):
+            feature_type = getattr(all_features, our_features[i]).type
             scale = getattr(all_features, our_features[i]).scale
-            if type == features.FeatureType.CATEGORICAL:
-                features[i] = tf.one_hot(tf.to_int32(tf.squeeze(features[i], axis=1)), scale, axis=1)
-                features[i] = layers.conv2d(features[i], num_outputs=np.log2(scale), kernel_size=1, data_format=self.use_data_format)
+            if feature_type == features.FeatureType.CATEGORICAL:
+                feature_layers[i] = tf.one_hot(tf.to_int32(tf.squeeze(feature_layers[i], axis=1)), scale, axis=1)
+                feature_layers[i] = layers.conv2d(feature_layers[i], num_outputs=np.log2(scale),
+                                                  kernel_size=1, data_format=self.use_data_format)
             else:
-                features[i] = tf.log(features[i] + 1.0)
+                feature_layers[i] = tf.log(feature_layers[i] + 1.0)
 
         block = tf.concat(features, axis=1)
         convolution1 = layers.conv2d(block, num_outputs=16, kernel_size=5, data_format="NCHW")
