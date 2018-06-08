@@ -106,10 +106,10 @@ class FullyConv:
         return name == 'screen' or name == 'screen2' or name == 'minimap'
 
     def get_neg_log_prob(self, action, policy):
-        action_fns, action_args = actions
+        action_fns, action_args = action
         policy_fns, policy_args = policy
 
-        fn_log_prob = self._compute_log_probs(policy_fns, action_fns)
+        fn_log_prob = self._compute_log_prob(policy_fns, action_fns)
         log_prob = fn_log_prob
 
         for arg_type in action_args.keys():
@@ -119,11 +119,9 @@ class FullyConv:
             log_prob += arg_log_prob
         return log_prob * -1.0
 
-    def _compute_log_prob(probs, labels):
-        # Select arbitrary element for unused arguments (log probs will be masked)
-        labels = tf.maximum(labels, 0)
+    def _compute_log_prob(self, probabilities, labels):
         indices = tf.stack([tf.range(tf.shape(labels)[0]), labels], axis=1)
-        return tf.log(tf.clip_by_value(tf.gather_nd(probs, indices), 1e-12, 1.0))
+        return tf.log(tf.clip_by_value(tf.gather_nd(probabilities, indices), 1e-12, 1.0))
 
     def get_entropy(self, policy):
         fns, args = policy
