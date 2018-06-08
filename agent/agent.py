@@ -14,7 +14,7 @@ class A2CAgent:
         self.sess = sess
         self.use_lstm = use_lstm
         self.agent_modifier = agent_modifier
-        self.discount = discount #TODO: use discount from sc2_env observation instead, won't need this class var then
+        self.discount = discount #Could use discount from sc2_env observation instead, won't need this class var then
         self.learning_rate = learning_rate
         self.max_gradient_norm = max_gradient_norm
         self.value_loss_coeff = value_loss_coeff

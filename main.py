@@ -1,7 +1,8 @@
 import json
 import tensorflow as tf
 from agent.runner import A2CRunner
-#from agent.agent import A2CAgent
+from agent.agent import A2CAgent
+from agent.modifiers.agent_modifier import AgentModifier
 from environment.environment import Environment
 from tests.environment_tests import test_env
 
@@ -26,9 +27,10 @@ def main():
     sess = tf.Session()
 
     env = Environment()
-    test_env(env, config)
+    #test_env(env, config)
 
-    agent = A2CAgent()
+    agent_modifier = AgentModifier(config, 32)
+    agent = A2CAgent(sess, agent_modifier)
     #agent = RandomAgent() ##for debugging TODO: delete later
 
     runner = A2CRunner(agent, env)
