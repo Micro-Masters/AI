@@ -10,7 +10,7 @@ from environment.environment import Environment
 def main():
 
     json_data = '{"observations": {"screen_features": ["height_map", "player_id", "player_relative", "unit_type"], ' \
-                '"minimap_features": ["player_id", "selected"], "nonspatial_features": ["player", "score_cumulative"], ' \
+                '"minimap_features": ["player_id", "selected"], "nonspatial_features": ["player"], ' \
                 '"action_ids": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}, "rewards": [1, 1, 1, 1]}'
     config = json.loads(json_data)
     print("config:")

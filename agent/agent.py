@@ -37,13 +37,13 @@ class A2CAgent:
         self.screen_input = tf.placeholder(tf.float32, observation_shapes['screen'], 'screen_input')
         self.minimap_input = tf.placeholder(tf.float32, observation_shapes['minimap'], 'minimap_input')
         self.nonspatial_input = tf.placeholder(tf.float32, observation_shapes['nonspatial'], 'nonspatial_input')
-        self.available_actions_input = tf.placeholder(tf.float32, observation_shapes['available_actions'], 'available_actions_input')
+        self.available_mask_input = tf.placeholder(tf.float32, observation_shapes['available_mask'], 'available_mask_input')
 
         self.model = FullyConv(self.agent_modifier.num_actions, self.use_lstm, self.agent_modifier.observation_data_format)
 
         # Create final action and value operations using model
         policy, value = self.model.build(self.screen_input, self.minimap_input, self.nonspatial_input,
-                                    self.available_actions_input, *self.agent_modifier.feature_names)
+                                    self.available_mask_input, *self.agent_modifier.feature_names)
         policy_action = self.model.sample_action(policy)
         return policy_action, value
 
@@ -53,7 +53,7 @@ class A2CAgent:
         fns = tf.placeholder(tf.int32, [None], 'fns')
         args = {
             k: tf.placeholder(tf.int32, [None], 'args')
-            for k in self.policy_action[1].keys()}
+            for k in self.policy[1].keys()}
         self.actions = (fns, args)
         self.returns = tf.placeholder(tf.float32, [None], 'returns')
         advantages = tf.stop_gradient(self.returns - self.value)

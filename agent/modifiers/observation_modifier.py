@@ -50,8 +50,8 @@ class ObservationModifier:
         self.shapes = {
             'screen': [len(config['screen_features']), resolution_size, resolution_size],
             'minimap': [len(config['minimap_features']), resolution_size, resolution_size],
-            'nonspatial': [len(config['nonspatial_features']), resolution_size, resolution_size],
-            'available_actions': [None]
+            'nonspatial': [len(config['nonspatial_features']), 11],
+            'available_mask': [len(config['action_ids'])]
         }
         self.data_format = 'NCHW'
 
@@ -73,12 +73,14 @@ class ObservationModifier:
 
         if "action_ids" in self.config:
             print("parsing action ids")
-            action_ids = list()
+            action_mask = list()
             for i in range(len(self.config["action_ids"])):
                 if self.config["action_ids"][i] in obs.observation.available_actions:
-                    action_ids.append(i)
+                    action_mask.append(1)
+                else:
+                    action_mask.append(0)
 
-            obs_dictionary["available_actions"] = action_ids
+            obs_dictionary["available_mask"] = action_mask
 
         return obs_dictionary
 
