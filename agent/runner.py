@@ -33,7 +33,7 @@ class A2CRunner:
             action, value = self.agent.act(self.observation)
             actions[i], values[i] = action, value
             observations[i] = self.observation
-            self.observation, rewards[i], dones[i] = self.env.step(action)
+            self.observation, rewards[i], dones[i] = self.env.step(self.agent.convert_action(action))
 
             # Modify the reward given such a modifier
             rewards[i] = self.agent.agent_modifier.modify_reward(

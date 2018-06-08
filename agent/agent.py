@@ -44,14 +44,14 @@ class A2CAgent:
     # Build the TensorFlow loss operation
     def _build_optimizer(self):
         # TensorFlow placeholders
-        returns = tf.placeholder(tf.float32, [None], 'returns')
-        values = tf.placeholder(tf.float32, [None], 'values')
-        advantages = tf.stop_gradient(returns - values)
+        self.returns = tf.placeholder(tf.float32, [None], 'returns')
+        self.values = tf.placeholder(tf.float32, [None], 'values')
+        advantages = tf.stop_gradient(self.returns - self.values)
 
         # Create loss TensorFlow operation using placeholders
         negative_log_policy = #TODO
         policy_loss = tf.reduce_mean(advantages * negative_log_policy)
-        value_loss = self.value_loss_coeff * tf.losses.reduce_mean_squared_error(values, returns)
+        value_loss = self.value_loss_coeff * tf.losses.reduce_mean_squared_error(self.values, self.returns)
         entropy_loss = self.entropy_loss_coeff * #TODO
 
         # Create the final optimizer using loss
@@ -68,17 +68,23 @@ class A2CAgent:
     # Take an observation (n_envs length array) and return the action, value
     def act(self, observation):
         #TODO also return log prob for action?
-        return self.sess.run([self.action, self.value], feed_dict=self._get_observations_feed(observation))
+        feed_dict = self._get_observations_feed(observation)
+        return self.sess.run([self.action, self.value], feed_dict=feed_dict)
 
     # Train the model to minimize loss
     def train(self, observations, actions, rewards, dones, values, next_value):
-        returns = self.get_returns(rewards, dones, values, next_value)
-        # TODO: Pass info into feed_dict below
-        self.sess.run(self.train_operation)
+        # TODO use log prob for action or pass actions
+        observations_feed = self._get_observations_feed(observations)
+        feed_dict = {
+            self.returns: self._get_returns(rewards, dones, values, next_value).flatten(),
+            self.values: values.flatten(),
+            **observations_feed
+        }
+        self.sess.run(self.train_operation, feed_dict=feed_dict)
 
     # Compute return values as return = reward + discount * next value * (0 if done else 1)
     def _get_returns(self, rewards, dones, values, next_value):
-        returns = np.zeros((rewards.shape[0], rewards.shape[1]), dtype=np.float32)
+        returns = np.zeros(rewards.shape, dtype=np.float32)
         # Compute the last return using next_value
         returns[-1] = rewards[-1] + self.discount * next_value * (1 - dones[-1])
         # Compute the rest in a loop using values, working backward
