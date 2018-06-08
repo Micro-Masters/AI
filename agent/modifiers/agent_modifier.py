@@ -7,7 +7,7 @@ class AgentModifier:
         self.observation_modifier = ObservationModifier(config['observations'])
         self.reward_modifier = RewardModifier(config['rewards'])
         self.observation_shapes = self.observation_modifier.shapes
-        self.actions_ids = config['observations']['actions']
+        self.actions_ids = config['observations']['action_ids']
         self.num_actions = len(self.actions_ids)
 
     # Modifies the rewards, takes in arrays of n_envs length (not known)
