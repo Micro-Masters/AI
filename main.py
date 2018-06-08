@@ -4,7 +4,7 @@ from agent.runner import A2CRunner
 from agent.agent import A2CAgent
 from agent.modifiers.agent_modifier import AgentModifier
 from environment.environment import Environment
-from tests.environment_tests import test_env
+#from tests.environment_tests import test_env
 
 
 def main():

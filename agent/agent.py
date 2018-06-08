@@ -23,19 +23,21 @@ class A2CAgent:
 
     # Build and initialize the TensorFlow graph
     def _build(self):
-        self.policy, self.action, self.value = self._build_model()
+        self.policy, self.value = self._build_model()
         self.train_operation = self._build_optimizer()
         self.sess.run(tf.global_variables_initializer())
 
     # Build TensorFlow action (single action from policy) & value operations
     def _build_model(self):
         # Declare model inputs (of any number of observations) and initialize model
-        observation_shapes = {v.insert(0, None)
-                              for k, v in self.self.agent_modifier.observation_shapes.items()}
-        self.screen_input = tf.placeholder(tf.float32, observation_shapes['screen'], 'screen input')
-        self.minimap_input = tf.placeholder(tf.float32, observation_shapes['minimap'], 'minimap input')
-        self.nonspatial_input = tf.placeholder(tf.float32, observation_shapes['nonspatial'], 'nonspatial input')
-        self.available_actions_input = tf.placeholder(tf.float32, observation_shapes['available_actions'], 'available actions input')
+        observation_shapes = self.agent_modifier.observation_shapes
+        for k, v in observation_shapes.items():
+            observation_shapes[k].insert(0, None)
+        print(observation_shapes['screen'])
+        self.screen_input = tf.placeholder(tf.float32, observation_shapes['screen'], 'screen_input')
+        self.minimap_input = tf.placeholder(tf.float32, observation_shapes['minimap'], 'minimap_input')
+        self.nonspatial_input = tf.placeholder(tf.float32, observation_shapes['nonspatial'], 'nonspatial_input')
+        self.available_actions_input = tf.placeholder(tf.float32, observation_shapes['available_actions'], 'available_actions_input')
 
         self.model = FullyConv(self.agent_modifier.num_actions, self.use_lstm, self.agent_modifier.observation_data_format)
 
@@ -80,7 +82,7 @@ class A2CAgent:
     # Take an observation (n_envs length array) and return the action, value
     def act(self, observation):
         feed_dict = self._get_observation_feed(observation)
-        return self.sess.run([self.action, self.value], feed_dict=feed_dict)
+        return self.sess.run([self.policy, self.value], feed_dict=feed_dict)
 
     # Train the model to minimize loss
     def train(self, observations, actions, rewards, dones, values, next_value):
@@ -129,4 +131,4 @@ class A2CAgent:
             fns.append(fn)
             for k, v in arg:
                 args[k].append(v)
-        return {self.action: (np.array(fns).flatten(), args)}
+        return {self.actions: (np.array(fns).flatten(), args)}

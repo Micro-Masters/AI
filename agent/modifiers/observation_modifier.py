@@ -50,7 +50,8 @@ class ObservationModifier:
         self.shapes = {
             'screen': [len(config['screen_features']), resolution_size, resolution_size],
             'minimap': [len(config['minimap_features']), resolution_size, resolution_size],
-            'nonspatial': [len(config['nonspatial_features']), resolution_size, resolution_size]
+            'nonspatial': [len(config['nonspatial_features']), resolution_size, resolution_size],
+            'available_actions': [None]
         }
         self.data_format = 'NCHW'
 
@@ -77,7 +78,7 @@ class ObservationModifier:
                 if self.config["action_ids"][i] in obs.observation.available_actions:
                     action_ids.append(i)
 
-            obs_dictionary["action_ids"] = action_ids
+            obs_dictionary["available_actions"] = action_ids
 
         return obs_dictionary
 

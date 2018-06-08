@@ -7,8 +7,8 @@ class AgentModifier:
         self.observation_modifier = ObservationModifier(config['observations'], resolution_size)
         self.resolution_size = resolution_size
         self.reward_modifier = RewardModifier(config['rewards'])
-        self.action_ids = config['observations']['actions_ids']
-        self.num_actions = len(self.actions_ids)
+        self.action_ids = config['observations']['action_ids']
+        self.num_actions = len(self.action_ids)
         self.feature_names = [config['observations']['screen_features'],
                               config['observations']['minimap_features'],
                               config['observations']['nonspatial_features']]
