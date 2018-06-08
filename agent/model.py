@@ -14,7 +14,18 @@ class FullyConv:
     # Select a single action from the policy
     def sample_action(self, policy):
         fn_out, args_out = policy
-        
+
+        fn_u = tf.random_uniform(tf.shape(fn_out))
+        fn_sample = tf.argmax(tf.log(fn_u) / fn_out, axis=1)
+
+        args_sample = dict()
+        for arg_type, arg_out in args_out.items():
+            arg_u = tf.random_uniform(tf.shape(arg_out))
+            arg_sample = tf.argmax(tf.log(arg_u) / arg_out, axis=1)
+            args_sample[arg_type] = arg_sample
+
+        return fn_sample, args_sample
+
 
     # Build and return the policy and value TensorFlow operations
     def build(self, screen_input, minimap_input, nonspatial_input, available_actions,
