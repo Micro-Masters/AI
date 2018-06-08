@@ -20,7 +20,7 @@ class A2CAgent:
         self.value_loss_coeff = value_loss_coeff
         self.entropy_loss_coeff = entropy_loss_coeff
         self._build()
-        self._build_ppo()
+        # self._build_ppo()
 
     # Build and initialize the TensorFlow graph
     def _build(self):
@@ -42,8 +42,7 @@ class A2CAgent:
         self.screen_input = tf.placeholder(tf.float32, observation_shapes['screen'], 'screen_input')
         self.minimap_input = tf.placeholder(tf.float32, observation_shapes['minimap'], 'minimap_input')
         self.nonspatial_input = tf.placeholder(tf.float32, observation_shapes['nonspatial'], 'nonspatial_input')
-        self.available_mask_input = tf.placeholder(tf.float32, observation_shapes['available_mask'],
-                                                   'available_mask_input')
+        self.available_mask_input = tf.placeholder(tf.float32, observation_shapes['available_mask'], 'available_mask_input')
 
         self.model = FullyConv(self.agent_modifier.num_actions, self.use_lstm,
                                self.agent_modifier.observation_data_format)
